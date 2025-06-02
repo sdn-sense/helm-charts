@@ -1,0 +1,15 @@
+{{- if .Values.logstorage.enabled -}}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.logstorage.volname | default (printf "pvclog-%s" (include "sitermdebug.truncname" .)) }}
+  namespace: {{ .Values.namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.logstorage.capacity }}
+  storageClassName: {{ .Values.logstorage.storageClassName }}
+{{- end -}}

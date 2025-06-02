@@ -1,0 +1,28 @@
+{{- if .Values.ingress.enabled -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  {{- with .Values.ingress.annotations }}
+  annotations:
+      {{- toYaml . | nindent 4 }}
+  {{- end }}
+  name: ingress-{{ template "sitefe.truncname" . }}
+  namespace: {{ .Values.namespace }}
+spec:
+  rules:
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: service-{{ template "sitefe.truncname" . }}
+            port:
+              number: 8443
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host }}
+    secretName:  cert-{{ template "sitefe.truncname" . }}
+{{- end }}

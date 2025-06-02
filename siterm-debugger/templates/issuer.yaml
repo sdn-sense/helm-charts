@@ -1,0 +1,24 @@
+{{- if .Values.issuer }}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ .Values.issuer_params.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  acme:
+    email: {{ .Values.issuer_params.email }}
+    preferredChain: ""
+    privateKeySecretRef:
+      name: issuer-account-key
+    server: {{ .Values.issuer_params.server }}
+    solvers:
+    - http01:
+        ingress:
+          class: haproxy
+          ingressTemplate:
+            metadata:
+              annotations:
+                ingress.kubernetes.io/ssl-redirect: "false"
+          serviceType: ClusterIP
+{{- end }}

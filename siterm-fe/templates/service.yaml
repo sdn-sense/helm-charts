@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-{{ template "sitefe.truncname" . }}
+  namespace: {{ .Values.namespace }}
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    run: run-{{ template "sitefe.truncname" . }}

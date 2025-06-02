@@ -1,0 +1,188 @@
+# Default values for siterm-agent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Namespace to deploy into.
+namespace: sense
+
+# Deployment Type:
+# Available Options are:
+#    Deployment - Deploy on one specific node
+#    DaemonSet - Deploy on all available nodes
+deploymentType: Deployment
+
+# Image to run. Helm charts run same image as helm version by default.
+# If you helm chart installed is 0.1.46 - it will use latest-1.4.6 image
+# Please consult SENSE team if any changes needed, but usually no.
+# During upgrade process - new helm chart will take new image of specified version of helm.
+# latest - Latest stable version (might be not from same helm release and missing Helm features)
+# dev - Development release (use with caution)
+# pullPolicy: Always - Always pull image from repository (that is default) Overwrite if needed.
+#image:
+#  pullPolicy: Always
+#  image: latest-20240614
+
+# Resources for Agent. This should not require any changes.
+# Defaults below (no need to uncomment and those will be used by helm chart)
+# Change it only if needed.
+cpuLimit: 16
+memoryLimit: 32Gi
+cpuRequest: 600m
+memoryRequest: 1Gi
+
+# tolerations for your deployment. Include as many as you need and it will
+# be added to your deployment file.
+#tolerations:
+#- key: "key"
+#  operator: "Equal|Exists"
+#  value: "value"
+#  effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
+
+# Node Selector for your deployment. Required to set if deploymentType is Deployment:
+nodeSelector:
+  kubernetes.io/hostname: hostname-replace-me-if-deployment
+# In case of DaemonSet - it will be ignored.
+
+# Affinity for your deployment. Include as many as you need and it will
+# be added to your deployment file.
+#affinity:
+#  nodeAffinity:
+#    requiredDuringSchedulingIgnoredDuringExecution:
+#      nodeSelectorTerms:
+#        - matchExpressions:
+#            - key: kubernetes.io/nodepool
+#              operator: In
+#              values:
+#                - nodepool1
+
+# Security Context for your deployment. Include as many as you need and it will be added to deployment
+# Default one is already included below, e.g. NET_ADMIN capabilities, and privileged mode.
+# SiteRM Agent requires privileges to create vlan interfaces and it requires NET_ADMIN capabilities.
+#securityContext:
+#  privileged: true
+#  capabilities:
+#    add:
+#    - NET_ADMIN
+
+# Persistent volume claim for Agent logs.
+# This should not require any changes if you run ceph and no others are supported yet.
+# If you have another storage class, change it (no guarantees to work and might need manual configuration)
+# If you set it to false - there is no guarantees for persistent storage (and data might be lost at pod restart)
+# Due to Kubernetes limitations, logstorage is not supported if deploymentType is Daemonset.
+# Kube does not allow (as of 2025-May) to dynamically resolve env variables inside claimName.
+# Option is to use StatefulSet and initContainers to mount and identify all pvc is curbersome.
+# Preferred option of deployment is Deployment.
+#logstorage:
+#  enabled: true
+#  storageClassName: rook-ceph-block
+#  capacity: 5Gi
+# volname: Optional, better not set to avoid conflict. By default it uses pvclog-<.Chart.Name>-<.Values.sitename>-<.Values.md5>, which is unique per deployment
+
+# Enable creation of ClusterRole and ClusterRoleBinding for Agent.
+# This is required to allow Agent to read node labels and other information.
+clusterrole:
+  enabled: true
+
+# Liveness and readiness probes for deployment.
+# Liveness probe for your deployment. It checks if agent is running and healthy.
+# By default - this is enabled and will be added to deployment.
+liveness:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 60
+  failureThreshold: 5
+  successThreshold: 1
+  timeoutSeconds: 30
+# Readiness probe for your deployment. It checks if agent is ready to accept connections.
+# By default - this is enabled and will be added to deployment.
+readiness:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 60
+  failureThreshold: 5
+  successThreshold: 1
+  timeoutSeconds: 30
+
+
+# Configuration parameters for Agent(s):
+# These must be defined and configured here: https://github.com/sdn-sense/rm-configs
+sitename: <REPLACE_ME_TO_SITENAME>
+gitrepo: "sdn-sense/rm-configs"
+branch: master
+# NOTE: In case deploymentType is DaemonSet - comment out md5 line;
+#       In DaemonSet deployment agent looks automatically for md5 using hostname
+#       and md5 defined here will not be used.
+#
+#       If deploymentType is Deployment - uncomment md5 line and define md5 here.
+#       md5 should be defined for a site under <gitrepo>/<branch>
+md5: <REPLACE_ME_TO_UUID>
+
+# SSL Certificate parameters:
+# It does support getting certificate from cert-manager or
+# from files directory inside this chart.
+# Below are 3 options supported by SiteRM Helm Charts.
+# Cert-manager depends on Kubernetes cluster and supported options.
+# Please check with your Kubernetes cluster administrator, which option is supported (ClusterIssuer, Issuer, Or none - in this case use Option 3)
+# ===================================================================================
+# Option 1: CERT MANAGER + ClusterIssuer
+# ClusterIssuer is a cluster-scoped resource, usable across all namespaces.
+#certmanager: true
+#certmanager_params:
+#  commonName: "hostname-replace-me"
+#  dnsNames:
+#    - "hostname-replace-me"
+#  issuerRef:
+#    group: cert-manager.io
+#    kind: ClusterIssuer
+#    name: incommon-v2-prod   # REPLACE BASED on your ClusterIssuer Name.
+#  privateKey:
+#    algorithm: RSA
+#    encoding: PKCS1
+#    size: 4096
+# ===================================================================================
+# Option 2: CERT MANAGER + Issuer
+# An Issuer is a namespaced resource, usable only within the same namespace it's defined in.
+# Set the correct location to hostcert and hostkey inside files directory
+# In case of cert manager - set certmanager to true
+# and all certmanager related parameters
+#certmanager: true
+#certmanager_params:
+#  commonName: "hostname-replace-me-if-deployment"
+#  dnsNames:
+#    - "hostname-replace-me-if-deployment"
+#  duration: 720h0m0s
+#  issuerRef:
+#    group: cert-manager.io
+#    kind: Issuer
+#    name: sense-issuer-agent  # Name of issuer must match issuer_params:name
+#   renewBefore: 120h0m0s
+#  privateKey:
+#    algorithm: RSA
+#    encoding: PKCS1
+#    size: 4096
+# Name of issuer must be same as used in certmanager_params:issuerRef:name
+# Email address for registering to server (e.g. LetsEncrypt requires that)
+#issuer: true
+#issuer_params:
+#  name: sense-issuer-agent # Name of issuer must match certmanager_params:issuerRef:name
+#  email: "myemailaddress@somedomain.com"
+#  server: "https://acme-v02.api.letsencrypt.org/directory"
+# ===================================================================================
+# Option 3: Manual Certificates
+# If you plan to define your own hostcert and hostkey, set certmanager: false
+# And in this case usehostcert: true
+# Also update hostcert and hostkey values.
+# IMPORTANT!!!!
+# Spacing is important, make sure to keep it at 2 spaces, which points to line beginning inside file (as this is a YAML file and need structure)
+#certmanager: false
+#usehostcert: true
+#hostcert: |
+#  -----BEGIN CERTIFICATE-----
+#  MIIITTCCBrWgAwIBAgIRAIQCECprMd/bWm5I5oKFx+owDQYJKoZIhvcNAQEMBQAw
+#  ....
+#  -----END CERTIFICATE-----
+#hostkey: |
+#  -----BEGIN RSA PRIVATE KEY-----
+#  MIIJKQIBAAKCAgEApJNvz1WUk/iW1VBkX3UsCWdoxRpH7nYvMCrqyRbiKUI54CHu
+#  ...
+#  -----END RSA PRIVATE KEY-----

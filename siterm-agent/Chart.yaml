@@ -1,0 +1,6 @@
+apiVersion: v2
+name: siterm-agent
+description: A Helm chart for Deploying SiteRM Agent Containers
+type: application
+version: 1.5.33-rc01
+appVersion: "1.16.0"

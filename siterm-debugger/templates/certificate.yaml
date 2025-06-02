@@ -1,0 +1,45 @@
+{{- if .Values.certmanager }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cert-{{ template "sitermagent.truncname" . }}
+  namespace: {{ .Values.namespace }}
+spec:
+  commonName: {{ .Values.certmanager_params.commonName }}
+{{- if .Values.certmanager_params.dnsNames }}
+  dnsNames:
+{{ toYaml .Values.certmanager_params.dnsNames | indent 4 }}
+{{- end }}
+{{- if .Values.certmanager_params.duration }}
+  duration: {{ .Values.certmanager_params.duration }}
+{{- end }}
+{{- if .Values.certmanager_params.issuerRef }}
+  issuerRef:
+{{ toYaml .Values.certmanager_params.issuerRef | indent 4 }}
+{{- end }}
+{{- if .Values.certmanager_params.privateKey }}
+  privateKey:
+{{ toYaml .Values.certmanager_params.privateKey | indent 4 }}
+{{- end }}
+{{- if .Values.certmanager_params.renewBefore }}
+  renewBefore: {{ .Values.certmanager_params.renewBefore }}
+{{- end }}
+  secretName: cert-{{ template "sitermagent.truncname" . }}
+{{- else if .Values.usehostcert }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cert-{{ template "sitermagent.truncname" . }}
+  namespace: {{ .Values.namespace}}
+data:
+{{- if not (quote .Values.hostcert | empty)  }}
+  tls.crt: {{ .Values.hostcert | b64enc }}
+{{- else }}
+{{- fail "value for hostcert must be set" }}
+{{- end -}}
+{{- if not (quote .Values.hostcert | empty)  }}
+  tls.key: {{ .Values.hostkey | b64enc }}
+{{- else }}
+{{- fail "value for hostkey must be set" }}
+{{- end -}}
+{{- end }}

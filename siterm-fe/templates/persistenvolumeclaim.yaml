@@ -1,0 +1,15 @@
+{{- if .Values.storage.enabled -}}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.storage.volname | default (printf "pvc-%s" (include "sitefe.truncname" .)) }}
+  namespace: {{ .Values.namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.storage.capacity }}
+  storageClassName: {{ .Values.storage.storageClassName }}
+{{- end -}}

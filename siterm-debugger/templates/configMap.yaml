@@ -1,0 +1,16 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: conf-{{ template "sitermdebug.truncname" . }}
+  namespace: {{ .Values.namespace }}
+data:
+  sense-siterm-agent: |
+    ---
+    GIT_REPO: {{ .Values.gitrepo }}
+    BRANCH: {{ .Values.branch }}
+    SITENAME: {{ .Values.sitename }}
+{{- if .Values.md5 }}
+    {{- if eq .Values.deploymentType "Deployment" }}
+    MD5: {{ .Values.md5 }}
+    {{- end }}
+{{- end }}

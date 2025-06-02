@@ -1,0 +1,15 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: conf-{{ template "sitefe.truncname" . }}
+  namespace: {{ .Values.namespace }}
+data:
+  sense-siterm-fe: |
+    ---
+    GIT_REPO: {{ .Values.gitrepo }}
+    BRANCH: {{ .Values.branch }}
+    SITENAME: {{ .Values.sitename }}
+{{- if .Values.md5 }}
+    MD5: {{ .Values.md5 }}
+{{- end }}

@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: {{ .Values.deploymentType }}
+metadata:
+  labels:
+    k8s-app: {{ template "sitermdebug.truncname" . }}
+    helm-version: {{ .Chart.Version }}
+    helm-app-version: {{ .Chart.AppVersion }}
+  name: {{ template "sitermdebug.truncname" . }}
+  namespace: {{ .Values.namespace}}
+spec:
+  selector:
+    matchLabels:
+      k8s-app: {{ template "sitermdebug.truncname" . }}
+  template:
+    metadata:
+      labels:
+        k8s-app: {{ template "sitermdebug.truncname" . }}
+        helm-version: {{ .Chart.Version }}
+        helm-app-version: {{ .Chart.AppVersion }}
+    spec:
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{ .Values.tolerations | toYaml | indent 8 | trim }}
+      {{- end }}
+      {{- if .Values.affinity }}
+      affinity:
+        {{ .Values.affinity | toYaml | indent 8 | trim }}
+      {{- end }}
+      {{- if and (.Values.nodeSelector) (eq .Values.deploymentType "Deployment")}}
+      nodeSelector:
+        {{ .Values.nodeSelector | toYaml | indent 8 | trim }}
+      {{- end }}
+      {{- if .Values.logstorage.enabled }}
+      initContainers:
+      - name: init-log-{{ template "sitermdebug.truncname" . }}
+        image: busybox
+        command: ["sh", "-c", "mkdir -p /var/log/supervisor"]
+        volumeMounts:
+        - name: pvclog-{{ template "sitermdebug.truncname" . }}
+          mountPath: /var/log
+      {{- end }}
+      containers:
+      - image: {{ template "deploymentimage" . }}
+        imagePullPolicy: {{ template "deploymentpullpolicy" . }}
+        name: {{ template "sitermdebug.truncname" . }}
+        resources:
+          limits:
+            cpu: {{ template "cpulimit" . }}
+            memory: {{ template "memorylimit" . }}
+          requests:
+            cpu: {{ template "cpuRequest" . }}
+            memory: {{ template "memoryRequest" . }}
+        securityContext:
+          {{- include "sitermdebug.SecurityContext" . | nindent 10 }}
+        {{- if .Values.liveness.enabled }}
+        livenessProbe:
+          exec:
+            command:
+            - siterm-liveness
+          initialDelaySeconds: {{ .Values.liveness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.liveness.periodSeconds }}
+          failureThreshold: {{ .Values.liveness.failureThreshold }}
+          successThreshold: {{ .Values.liveness.successThreshold }}
+          timeoutSeconds: {{ .Values.liveness.timeoutSeconds }}
+        {{- end }}
+        {{- if .Values.readiness.enabled }}
+        readinessProbe:
+          exec:
+            command:
+            - siterm-readiness
+          initialDelaySeconds: {{ .Values.readiness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readiness.periodSeconds }}
+          failureThreshold: {{ .Values.readiness.failureThreshold }}
+          successThreshold: {{ .Values.readiness.successThreshold }}
+          timeoutSeconds: {{ .Values.readiness.timeoutSeconds }}
+        {{- end }}
+        volumeMounts:
+        {{- if .Values.logstorage.enabled }}
+        - mountPath: /var/log/
+          name: pvclog-{{ template "sitermdebug.truncname" . }}
+        {{- end }}
+        - mountPath: /etc/siterm.yaml
+          name: conf-{{ template "sitermdebug.truncname" . }}
+          subPath: sense-siterm-agent.yaml
+        - mountPath: /etc/grid-security/hostcert.pem
+          name: agent-hostcert
+          readOnly: true
+          subPath: hostcert.pem
+        - mountPath: /etc/grid-security/hostkey.pem
+          name: agent-hostkey
+          readOnly: true
+          subPath: hostkey.pem
+      hostNetwork: true
+      hostPID: true
+      restartPolicy: Always
+      volumes:
+        - name: agent-hostcert
+          secret:
+            defaultMode: 420
+            items:
+            - key: tls.crt
+              path: hostcert.pem
+            secretName: cert-{{ template "sitermagent.truncname" . }}
+        - name: agent-hostkey
+          secret:
+            defaultMode: 384
+            items:
+            - key: tls.key
+              path: hostkey.pem
+            secretName: cert-{{ template "sitermagent.truncname" . }}
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: sense-siterm-agent
+              path: sense-siterm-agent.yaml
+            name: conf-{{ template "sitermdebug.truncname" . }}
+          name: conf-{{ template "sitermdebug.truncname" . }}
+        {{- if .Values.logstorage.enabled }}
+        - name: pvclog-{{ template "sitermdebug.truncname" . }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.logstorage.volname | default (printf "pvclog-%s" (include "sitermdebug.truncname" .)) }}
+        {{- end }}
