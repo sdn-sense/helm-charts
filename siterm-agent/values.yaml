@@ -56,10 +56,9 @@ nodeSelector:
 #                - nodepool1
 
 # Security Context for your deployment. Include as many as you need and it will be added to deployment
-# Default one is already included below, e.g. NET_ADMIN capabilities, and privileged mode.
+# Default one is already included below, e.g. NET_ADMIN capabilities
 # SiteRM Agent requires privileges to create vlan interfaces and it requires NET_ADMIN capabilities.
 #securityContext:
-#  privileged: true
 #  capabilities:
 #    add:
 #    - NET_ADMIN

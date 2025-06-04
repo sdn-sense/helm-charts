@@ -6,13 +6,22 @@ CHARTS=("siterm-fe" "siterm-agent" "siterm-debugger")
 BUILD_DIR="$BASE_DIR/builds"
 REPO_URL="https://sdn-sense.github.io/helm-charts/builds"
 
+# Require $1 (NEW_VERSION)
+if [ -z "$1" ]; then
+  echo "Usage: $0 <chart-version> [image-tag]"
+  echo "Error: <chart-version> argument is required. If image-tag not specified, it will use same as chart-version"
+  exit 1
+fi
+
 # Ensure builds directory exists
 mkdir -p "$BUILD_DIR"
 
 NEW_VERSION=$1
+IMAGE_TAG=${2:-$NEW_VERSION}
 
 if [ -n "$NEW_VERSION" ]; then
-  echo "Updating chart versions and image tags to: $NEW_VERSION"
+  echo "Updating chart version: $NEW_VERSION"
+  echo "Using image tag: $IMAGE_TAG"
   for CHART in "${CHARTS[@]}"; do
     CHART_PATH="$BASE_DIR/$CHART"
     CHART_YAML="$CHART_PATH/Chart.yaml"
@@ -25,7 +34,7 @@ if [ -n "$NEW_VERSION" ]; then
 
     if [ -f "$HELPERS_TPL" ]; then
       echo "Updating hardcoded image tag in $HELPERS_TPL"
-      sed -i '' -E "s|(sdnsense/$CHART:)[0-9A-Za-z._-]+\"[ \t]*\}\}[ \t]*\$|\1$NEW_VERSION\" }}|g" "$HELPERS_TPL"
+      sed -i '' -E "s|(sdnsense/$CHART:)[0-9A-Za-z._-]+\"[ \t]*\}\}[ \t]*\$|\1$IMAGE_TAG\" }}|g" "$HELPERS_TPL"
     fi
   done
 fi
