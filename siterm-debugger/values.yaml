@@ -11,6 +11,11 @@ namespace: sense
 #    DaemonSet - Deploy on all available nodes
 deploymentType: Deployment
 
+# Annotations:
+# Add any needed annotations to deployment; This is useful for Multus and Debugger
+#annotations:
+#  k8s.v1.cni.cncf.io/networks: '[{ "name": "1234", "ips": ["2001:1234:1234:0::1/64"], "mac": "11:22:33:44:55:66", "gateway": ["2001:1234:1234:0::1"] }]'
+
 # Image to run. Helm charts run same image as helm version by default.
 # If you helm chart installed is 0.1.46 - it will use latest-1.4.6 image
 # Please consult SENSE team if any changes needed, but usually no.

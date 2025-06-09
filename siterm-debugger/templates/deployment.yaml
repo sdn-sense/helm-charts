@@ -17,6 +17,10 @@ spec:
         k8s-app: {{ template "sitermdebug.truncname" . }}
         helm-version: {{ .Chart.Version }}
         helm-app-version: {{ .Chart.AppVersion }}
+      {{- if .Values.annotations }}
+      annotations:
+        {{ .Values.annotations | toYaml | indent 8 }}
+      {{- end }}
     spec:
       {{- if .Values.tolerations }}
       tolerations:

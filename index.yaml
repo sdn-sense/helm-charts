@@ -3,6 +3,16 @@ entries:
   siterm-agent:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-06-09T06:42:15.257692-05:00"
+    description: A Helm chart for Deploying SiteRM Agent Containers
+    digest: 4680edd20333be12a0727268f74a412d2d77de3befa753b98f471627e7716a28
+    name: siterm-agent
+    type: application
+    urls:
+    - https://sdn-sense.github.io/helm-charts/builds/siterm-agent-1.5.33-rc03.tgz
+    version: 1.5.33-rc03
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-06-04T17:42:26.752933-05:00"
     description: A Helm chart for Deploying SiteRM Agent Containers
     digest: e6152c98146b1c9e7da973d0ac427338b5e60b4b0942db735c3aa33a7be919a6
@@ -22,6 +32,16 @@ entries:
     - https://sdn-sense.github.io/helm-charts/builds/siterm-agent-1.5.33-rc01.tgz
     version: 1.5.33-rc01
   siterm-debugger:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-06-09T06:42:15.258082-05:00"
+    description: A Helm chart for Deploying SiteRM Debugger Containers
+    digest: e6dfe769669be85649103617bc96fd390ea7649fd482f369fed60b44d9cc09c8
+    name: siterm-debugger
+    type: application
+    urls:
+    - https://sdn-sense.github.io/helm-charts/builds/siterm-debugger-1.5.33-rc03.tgz
+    version: 1.5.33-rc03
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2025-06-04T17:42:26.755469-05:00"
@@ -45,6 +65,16 @@ entries:
   siterm-fe:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-06-09T06:42:15.258444-05:00"
+    description: A Helm chart for Deploying SiteRM Frontend Containers
+    digest: 6c343e8210921412503a2d62f39b3644df216fd941c3680ed0619daba2174bab
+    name: siterm-fe
+    type: application
+    urls:
+    - https://sdn-sense.github.io/helm-charts/builds/siterm-fe-1.5.33-rc03.tgz
+    version: 1.5.33-rc03
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-06-04T17:42:26.755944-05:00"
     description: A Helm chart for Deploying SiteRM Frontend Containers
     digest: 758493f744919ba23a3a699319d2842deb463cc3eb18e3696bb1cd5b9f2f5892
@@ -63,4 +93,4 @@ entries:
     urls:
     - https://sdn-sense.github.io/helm-charts/builds/siterm-fe-1.5.33-rc01.tgz
     version: 1.5.33-rc01
-generated: "2025-06-04T17:42:26.752501-05:00"
+generated: "2025-06-09T06:42:15.254871-05:00"
