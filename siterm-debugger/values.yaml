@@ -16,6 +16,13 @@ deploymentType: Deployment
 #annotations:
 #  k8s.v1.cni.cncf.io/networks: '[{ "name": "1234", "ips": ["2001:1234:1234:0::1/64"], "mac": "11:22:33:44:55:66", "gateway": ["2001:1234:1234:0::1"] }]'
 
+# Custom Pod name
+# By default, Debugger will use siterm-debugger-conf-<md5>-<randomchars>
+# In case there are multiple debuggers (e.g. one for host level, and another for a specific L3 range)
+# need to change and provide an additional name. This will replace first part 'siterm-debugger' with your own customPodName
+# With this - it allows to run multiple debugger instances
+#customPodName: "somename"
+
 # Image to run. Helm charts run same image as helm version by default.
 # If you helm chart installed is 0.1.46 - it will use latest-1.4.6 image
 # Please consult SENSE team if any changes needed, but usually no.
@@ -62,11 +69,17 @@ nodeSelector:
 
 # Security Context for your deployment. Include as many as you need and it will be added to deployment
 # Default one is already included below, e.g. NET_ADMIN capabilities
-# SiteRM Agent requires privileges to create vlan interfaces and it requires NET_ADMIN capabilities.
+# SiteRM Agent requires privileges to create vlan interfaces and it requires NET_ADMIN capabilities. This is default for an Agent.
+# SiteRM Debugger does not require any privileges.
 #securityContext:
 #  capabilities:
 #    add:
 #    - NET_ADMIN
+
+# Enable hostNetwork. This is by default True
+#hostNetwork: true
+# Enable hostPID. This is by default False
+#hostPID: false
 
 # Persistent volume claim for Agent logs.
 # This should not require any changes if you run ceph and no others are supported yet.

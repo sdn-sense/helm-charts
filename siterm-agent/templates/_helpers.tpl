@@ -141,3 +141,26 @@ capabilities:
   - NET_ADMIN
 {{- end }}
 {{- end }}
+
+{{/*
+Evaluate whether logstorage.enabled is true
+*/}}
+{{- define "sitermagent.logstorageEnabled" -}}
+{{- $enabled := false }}
+{{- if and (not (kindIs "invalid" .Values.logstorage)) (kindIs "map" .Values.logstorage) }}
+  {{- if hasKey .Values.logstorage "enabled" }}
+    {{- $enabled = .Values.logstorage.enabled }}
+  {{- end }}
+{{- end }}
+{{- ternary "true" "false" $enabled }}
+{{- end }}
+
+{{/*
+Validation check: DaemonSet cannot be used if logstorage.enabled is true
+*/}}
+{{- define "sitermagent.validateDeploymentType" -}}
+{{- $logEnabled := (include "sitermagent.logstorageEnabled" .) | trim | eq "true" }}
+{{- if and (eq .Values.deploymentType "DaemonSet") $logEnabled }}
+  {{- fail "Error: 'DaemonSet' deployment type cannot be used when 'logstorage.enabled' is true. Please disable logstorage or change deploymentType to 'Deployment'." }}
+{{- end }}
+{{- end }}

@@ -138,3 +138,29 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Evaluate whether logstorage.enabled is true
+*/}}
+{{- define "sitefe.logstorageEnabled" -}}
+{{- $enabled := false }}
+{{- if and (not (kindIs "invalid" .Values.logstorage)) (kindIs "map" .Values.logstorage) }}
+  {{- if hasKey .Values.logstorage "enabled" }}
+    {{- $enabled = .Values.logstorage.enabled }}
+  {{- end }}
+{{- end }}
+{{- ternary "true" "false" $enabled }}
+{{- end }}
+
+{{/*
+Evaluate whether storage.enabled is true
+*/}}
+{{- define "sitefe.storageEnabled" -}}
+{{- $enabled := false }}
+{{- if and (not (kindIs "invalid" .Values.storage)) (kindIs "map" .Values.storage) }}
+  {{- if hasKey .Values.storage "enabled" }}
+    {{- $enabled = .Values.storage.enabled }}
+  {{- end }}
+{{- end }}
+{{- ternary "true" "false" $enabled }}
+{{- end }}

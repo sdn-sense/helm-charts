@@ -34,7 +34,7 @@ spec:
       nodeSelector:
         {{ .Values.nodeSelector | toYaml | indent 8 | trim }}
       {{- end }}
-      {{- if .Values.logstorage.enabled }}
+      {{- if (include "sitermdebugger.logstorageEnabled" . | trim | eq "true") }}
       initContainers:
       - name: init-log-{{ template "sitermdebug.truncname" . }}
         image: busybox
@@ -79,7 +79,7 @@ spec:
           timeoutSeconds: {{ .Values.readiness.timeoutSeconds }}
         {{- end }}
         volumeMounts:
-        {{- if .Values.logstorage.enabled }}
+        {{- if (include "sitermdebugger.logstorageEnabled" . | trim | eq "true") }}
         - mountPath: /var/log/
           name: pvclog-{{ template "sitermdebug.truncname" . }}
         {{- end }}
@@ -94,8 +94,8 @@ spec:
           name: agent-hostkey
           readOnly: true
           subPath: hostkey.pem
-      hostNetwork: true
-      hostPID: true
+      hostNetwork: {{ include "hostnetwork" . | trim }}
+      hostPID: {{ include "hostpid" . | trim }}
       restartPolicy: Always
       volumes:
         - name: agent-hostcert
@@ -119,7 +119,7 @@ spec:
               path: sense-siterm-agent.yaml
             name: conf-{{ template "sitermdebug.truncname" . }}
           name: conf-{{ template "sitermdebug.truncname" . }}
-        {{- if .Values.logstorage.enabled }}
+        {{- if (include "sitermdebugger.logstorageEnabled" . | trim | eq "true") }}
         - name: pvclog-{{ template "sitermdebug.truncname" . }}
           persistentVolumeClaim:
             claimName: {{ .Values.logstorage.volname | default (printf "pvclog-%s" (include "sitermdebug.truncname" .)) }}

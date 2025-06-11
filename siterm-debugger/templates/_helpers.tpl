@@ -85,14 +85,15 @@ Also defined siterm-debug chart name (this dir). This chart re-uses same certss 
 This is to ensure that the siterm-debug chart can be used with the same configuration as sitermagent.
 */}}
 {{- define "sitermdebug.truncname" -}}
+{{- $baseName := default .Chart.Name .Values.customPodName }}
 {{- if .Values.md5 }}
 {{- if eq .Values.deploymentType "Deployment" }}
-{{- printf "%s-conf-%s" .Chart.Name .Values.md5 | replace "_" "-" | trunc 53 | trimSuffix "-" }}
+{{- printf "%s-conf-%s" $baseName .Values.md5 | replace "_" "-" | trunc 53 | trimSuffix "-" }}
 {{- else }}
-{{- printf "%s-conf-%s" .Chart.Name .Values.deploymentType | replace "_" "-" | trunc 53 | trimSuffix "-" | lower }}
+{{- printf "%s-conf-%s" $baseName .Values.deploymentType | replace "_" "-" | trunc 53 | trimSuffix "-" | lower }}
 {{- end }}
 {{- else }}
-{{- printf "%s-conf-%s" .Chart.Name .Values.deploymentType | replace "_" "-" | trunc 53 | trimSuffix "-" | lower }}
+{{- printf "%s-conf-%s" $baseName .Values.deploymentType | replace "_" "-" | trunc 53 | trimSuffix "-" | lower }}
 {{- end }}
 {{- end }}
 
@@ -105,7 +106,8 @@ If release name contains chart name it will be used as a full name.
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 53 | trimSuffix "-" }}
 {{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- $baseName := default .Chart.Name .Values.customPodName }}
+{{- $name := default $baseName .Values.nameOverride }}
 {{- if contains $name .Release.Name }}
 {{- .Release.Name | trunc 53 | trimSuffix "-" }}
 {{- else }}
@@ -152,8 +154,51 @@ Security Context for the deployment
 {{- if .Values.securityContext -}}
 {{ toYaml .Values.securityContext }}
 {{- else -}}
-capabilities:
-  add:
-  - NET_ADMIN
+capabilities: {}
+{{- end }}
+{{- end }}
+
+{{/*
+hostNetwork default for the deployment
+*/}}
+{{- define "hostnetwork" -}}
+{{- if hasKey .Values "hostNetwork" }}
+{{ .Values.hostNetwork }}
+{{- else }}
+true
+{{- end }}
+{{- end }}
+
+{{/*
+hostPID default for the deployment
+*/}}
+{{- define "hostpid" -}}
+{{- if hasKey .Values "hostPID" }}
+{{ .Values.hostPID }}
+{{- else }}
+false
+{{- end }}
+{{- end }}
+
+{{/*
+Evaluate whether logstorage.enabled is true
+*/}}
+{{- define "sitermdebugger.logstorageEnabled" -}}
+{{- $enabled := false }}
+{{- if and (not (kindIs "invalid" .Values.logstorage)) (kindIs "map" .Values.logstorage) }}
+  {{- if hasKey .Values.logstorage "enabled" }}
+    {{- $enabled = .Values.logstorage.enabled }}
+  {{- end }}
+{{- end }}
+{{- ternary "true" "false" $enabled }}
+{{- end }}
+
+{{/*
+Validation check: DaemonSet cannot be used if logstorage.enabled is true
+*/}}
+{{- define "sitermdebugger.validateDeploymentType" -}}
+{{- $logEnabled := (include "sitermdebugger.logstorageEnabled" .) | trim | eq "true" }}
+{{- if and (eq .Values.deploymentType "DaemonSet") $logEnabled }}
+  {{- fail "Error: 'DaemonSet' deployment type cannot be used when 'logstorage.enabled' is true. Please disable logstorage or change deploymentType to 'Deployment'." }}
 {{- end }}
 {{- end }}

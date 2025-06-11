@@ -1,15 +1,16 @@
-{{- if .Values.logstorage.enabled -}}
+{{- if (include "sitefe.logstorageEnabled" . | trim | eq "true") }}
+{{- $logstorage := get .Values "logstorage" | default dict }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.logstorage.volname | default (printf "pvclog-%s" (include "sitefe.truncname" .)) }}
+  name: {{ get $logstorage "volname" | default (printf "pvclog-%s" (include "sitefe.truncname" .)) }}
   namespace: {{ .Values.namespace }}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.logstorage.capacity }}
-  storageClassName: {{ .Values.logstorage.storageClassName }}
-{{- end -}}
+      storage: {{ get $logstorage "capacity" | default "5Gi" }}
+  storageClassName: {{ get $logstorage "storageClassName" | default "standard" }}
+{{- end }}
