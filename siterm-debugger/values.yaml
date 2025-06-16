@@ -50,7 +50,7 @@ memoryRequest: 1Gi
 #  value: "value"
 #  effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
 
-# Node Selector for your deployment. Required to set if deploymentType is Deployment:
+# Node Selector for your deployment.
 #nodeSelector:
 #  kubernetes.io/hostname: hostname-replace-me-if-deployment
 # In case of DaemonSet - it will be ignored.
