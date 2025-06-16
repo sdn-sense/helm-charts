@@ -1,7 +1,7 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: conf-{{ template "sitermdebug.truncname" . }}
+  name: conf-{{ template "sitermdebugger.truncname" . }}
   namespace: {{ .Values.namespace }}
 data:
   sense-siterm-agent: |

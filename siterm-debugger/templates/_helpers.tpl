@@ -84,7 +84,7 @@ Expand the name of the chart.
 Also defined siterm-debug chart name (this dir). This chart re-uses same certss and configmap names as sitermagent chart.
 This is to ensure that the siterm-debug chart can be used with the same configuration as sitermagent.
 */}}
-{{- define "sitermdebug.truncname" -}}
+{{- define "sitermdebugger.truncname" -}}
 {{- $baseName := default .Chart.Name .Values.customPodName }}
 {{- if .Values.md5 }}
 {{- if eq .Values.deploymentType "Deployment" }}
@@ -119,9 +119,9 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Common labels
 */}}
-{{- define "sitermdebug.labels" -}}
-helm.sh/chart: {{ include "sitermdebug.chart" . }}
-{{ include "sitermdebug.selectorLabels" . }}
+{{- define "sitermdebugger.labels" -}}
+helm.sh/chart: {{ include "sitermdebugger.chart" . }}
+{{ include "sitermdebugger.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -131,17 +131,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "sitermdebug.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "sitermdebug.name" . }}
+{{- define "sitermdebugger.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "sitermdebugger.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "sitermdebug.serviceAccountName" -}}
+{{- define "sitermdebugger.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "sitermdebug.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "sitermdebugger.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -150,7 +150,7 @@ Create the name of the service account to use
 {{/*
 Security Context for the deployment
 */}}
-{{- define "sitermdebug.SecurityContext" -}}
+{{- define "sitermdebugger.SecurityContext" -}}
 {{- if .Values.securityContext -}}
 {{ toYaml .Values.securityContext }}
 {{- else -}}

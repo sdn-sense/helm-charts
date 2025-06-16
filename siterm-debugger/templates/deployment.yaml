@@ -2,19 +2,19 @@ apiVersion: apps/v1
 kind: {{ .Values.deploymentType }}
 metadata:
   labels:
-    k8s-app: {{ template "sitermdebug.truncname" . }}
+    k8s-app: {{ template "sitermdebugger.truncname" . }}
     helm-version: {{ .Chart.Version }}
     helm-app-version: {{ .Chart.AppVersion }}
-  name: {{ template "sitermdebug.truncname" . }}
+  name: {{ template "sitermdebugger.truncname" . }}
   namespace: {{ .Values.namespace}}
 spec:
   selector:
     matchLabels:
-      k8s-app: {{ template "sitermdebug.truncname" . }}
+      k8s-app: {{ template "sitermdebugger.truncname" . }}
   template:
     metadata:
       labels:
-        k8s-app: {{ template "sitermdebug.truncname" . }}
+        k8s-app: {{ template "sitermdebugger.truncname" . }}
         helm-version: {{ .Chart.Version }}
         helm-app-version: {{ .Chart.AppVersion }}
       {{- if .Values.annotations }}
@@ -36,17 +36,17 @@ spec:
       {{- end }}
       {{- if (include "sitermdebugger.logstorageEnabled" . | trim | eq "true") }}
       initContainers:
-      - name: init-log-{{ template "sitermdebug.truncname" . }}
+      - name: init-log-{{ template "sitermdebugger.truncname" . }}
         image: busybox
         command: ["sh", "-c", "mkdir -p /var/log/supervisor"]
         volumeMounts:
-        - name: pvclog-{{ template "sitermdebug.truncname" . }}
+        - name: pvclog-{{ template "sitermdebugger.truncname" . }}
           mountPath: /var/log
       {{- end }}
       containers:
       - image: {{ template "deploymentimage" . }}
         imagePullPolicy: {{ template "deploymentpullpolicy" . }}
-        name: {{ template "sitermdebug.truncname" . }}
+        name: {{ template "sitermdebugger.truncname" . }}
         resources:
           limits:
             cpu: {{ template "cpulimit" . }}
@@ -55,7 +55,7 @@ spec:
             cpu: {{ template "cpuRequest" . }}
             memory: {{ template "memoryRequest" . }}
         securityContext:
-          {{- include "sitermdebug.SecurityContext" . | nindent 10 }}
+          {{- include "sitermdebugger.SecurityContext" . | nindent 10 }}
         {{- if .Values.liveness.enabled }}
         livenessProbe:
           exec:
@@ -81,10 +81,10 @@ spec:
         volumeMounts:
         {{- if (include "sitermdebugger.logstorageEnabled" . | trim | eq "true") }}
         - mountPath: /var/log/
-          name: pvclog-{{ template "sitermdebug.truncname" . }}
+          name: pvclog-{{ template "sitermdebugger.truncname" . }}
         {{- end }}
         - mountPath: /etc/siterm.yaml
-          name: conf-{{ template "sitermdebug.truncname" . }}
+          name: conf-{{ template "sitermdebugger.truncname" . }}
           subPath: sense-siterm-agent.yaml
         - mountPath: /etc/grid-security/hostcert.pem
           name: agent-hostcert
@@ -117,10 +117,10 @@ spec:
             items:
             - key: sense-siterm-agent
               path: sense-siterm-agent.yaml
-            name: conf-{{ template "sitermdebug.truncname" . }}
-          name: conf-{{ template "sitermdebug.truncname" . }}
+            name: conf-{{ template "sitermdebugger.truncname" . }}
+          name: conf-{{ template "sitermdebugger.truncname" . }}
         {{- if (include "sitermdebugger.logstorageEnabled" . | trim | eq "true") }}
-        - name: pvclog-{{ template "sitermdebug.truncname" . }}
+        - name: pvclog-{{ template "sitermdebugger.truncname" . }}
           persistentVolumeClaim:
-            claimName: {{ .Values.logstorage.volname | default (printf "pvclog-%s" (include "sitermdebug.truncname" .)) }}
+            claimName: {{ .Values.logstorage.volname | default (printf "pvclog-%s" (include "sitermdebugger.truncname" .)) }}
         {{- end }}
