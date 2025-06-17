@@ -3,7 +3,17 @@ entries:
   siterm-agent:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-06-17T07:28:53.829385-05:00"
+    created: "2025-06-17T07:42:48.933023-05:00"
+    description: A Helm chart for Deploying SiteRM Agent Containers
+    digest: cdbc3f818e5acd88712644721e80914e360452803e617597956b09cda5979959
+    name: siterm-agent
+    type: application
+    urls:
+    - https://sdn-sense.github.io/helm-charts/builds/siterm-agent-1.5.34-rc07.tgz
+    version: 1.5.34-rc07
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-06-17T07:42:48.93263-05:00"
     description: A Helm chart for Deploying SiteRM Agent Containers
     digest: 8962dcf243bf088091c788793d0b970ddc34b0b3dd04619c701279ff7f3f2d55
     name: siterm-agent
@@ -13,7 +23,7 @@ entries:
     version: 1.5.34-rc06
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-06-17T07:28:53.828993-05:00"
+    created: "2025-06-17T07:42:48.930352-05:00"
     description: A Helm chart for Deploying SiteRM Agent Containers
     digest: 390aa5ab573239b4c0f5d723d497e63b0a35c147b80ecdcf47db60cbc99116a3
     name: siterm-agent
@@ -64,7 +74,17 @@ entries:
   siterm-debugger:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-06-17T07:28:53.830001-05:00"
+    created: "2025-06-17T07:42:48.933934-05:00"
+    description: A Helm chart for Deploying SiteRM Debugger Containers
+    digest: 3f40bd881be16e8577b3eda086e861c8d41b1731c44869f56aa8c2d08036c2d1
+    name: siterm-debugger
+    type: application
+    urls:
+    - https://sdn-sense.github.io/helm-charts/builds/siterm-debugger-1.5.34-rc07.tgz
+    version: 1.5.34-rc07
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-06-17T07:42:48.933657-05:00"
     description: A Helm chart for Deploying SiteRM Debugger Containers
     digest: 4f7dcc0a339098dd693a2fd2e0a0bd474831901ec0b5b75255b06c63b2866d2c
     name: siterm-debugger
@@ -74,7 +94,7 @@ entries:
     version: 1.5.34-rc06
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-06-17T07:28:53.829691-05:00"
+    created: "2025-06-17T07:42:48.93337-05:00"
     description: A Helm chart for Deploying SiteRM Debugger Containers
     digest: c1c1e371458dc1947ff15aaef1900cabc8ed2cd9097b6eaea28ee5e190b8ceb8
     name: siterm-debugger
@@ -125,7 +145,17 @@ entries:
   siterm-fe:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-06-17T07:28:53.830686-05:00"
+    created: "2025-06-17T07:42:48.934946-05:00"
+    description: A Helm chart for Deploying SiteRM Frontend Containers
+    digest: 04494de924aff222136faeb05937dead342cd8d68f851633072d41e05ea43937
+    name: siterm-fe
+    type: application
+    urls:
+    - https://sdn-sense.github.io/helm-charts/builds/siterm-fe-1.5.34-rc07.tgz
+    version: 1.5.34-rc07
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-06-17T07:42:48.934626-05:00"
     description: A Helm chart for Deploying SiteRM Frontend Containers
     digest: 6e8207a5e9955f967c776c8814361c873d9afc23f10db92f346c2c5395c4ad6f
     name: siterm-fe
@@ -135,7 +165,7 @@ entries:
     version: 1.5.34-rc06
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-06-17T07:28:53.830337-05:00"
+    created: "2025-06-17T07:42:48.934288-05:00"
     description: A Helm chart for Deploying SiteRM Frontend Containers
     digest: 7938af7aff463e4985e886def8ce2ce0850b21ee140a545494b168b8aaf2b14f
     name: siterm-fe
@@ -183,4 +213,4 @@ entries:
     urls:
     - https://sdn-sense.github.io/helm-charts/builds/siterm-fe-1.5.34-rc01.tgz
     version: 1.5.34-rc01
-generated: "2025-06-17T07:28:53.826774-05:00"
+generated: "2025-06-17T07:42:48.92987-05:00"

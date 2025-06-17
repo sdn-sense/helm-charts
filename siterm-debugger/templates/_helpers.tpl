@@ -81,7 +81,7 @@ Expand the name of the chart.
 {{- end }}
 
 {{/*
-Also defined siterm-debug chart name (this dir). This chart re-uses same certss and configmap names as sitermagent chart.
+Also defined siterm-debug chart name (this dir). This chart re-uses same certs and configmap names as sitermagent chart.
 This is to ensure that the siterm-debug chart can be used with the same configuration as sitermagent.
 */}}
 {{- define "sitermdebugger.truncname" -}}
@@ -98,54 +98,22 @@ This is to ensure that the siterm-debug chart can be used with the same configur
 {{- end }}
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 53 chars because some Kubernetes name fields are limited to this (by the DNS naming spec) (e.g. max is 63, we leave 10chars).
-If release name contains chart name it will be used as a full name.
+Create a default deployment/statefulset/daemonset app name used in matching pods/deployments.
+We truncate at 43 chars because some Kubernetes name fields are limited to this (by the DNS naming spec) (e.g. max is 63, we leave 20chars).
 */}}
-{{- define "sitermagent.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 53 | trimSuffix "-" }}
-{{- else }}
+{{- define "sitermdebugger.name" -}}
 {{- $baseName := default .Chart.Name .Values.customPodName }}
-{{- $name := default $baseName .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 53 | trimSuffix "-" }}
+{{- if .Values.md5 }}
+{{- if or (eq .Values.deploymentType "StatefulSet") (eq .Values.deploymentType "Deployment") }}
+{{- printf "%s-conf-%s" $baseName .Values.md5 | replace "_" "-" | trunc 43 | trimSuffix "-" }}
 {{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 53 | trimSuffix "-" }}
+{{- printf "%s-conf-%s" $baseName .Values.deploymentType | replace "_" "-" | trunc 43 | trimSuffix "-" | lower }}
 {{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Common labels
-*/}}
-{{- define "sitermdebugger.labels" -}}
-helm.sh/chart: {{ include "sitermdebugger.chart" . }}
-{{ include "sitermdebugger.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "sitermdebugger.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "sitermdebugger.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "sitermdebugger.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "sitermdebugger.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{- printf "%s-conf-%s" $baseName .Values.deploymentType | replace "_" "-" | trunc 43 | trimSuffix "-" | lower }}
 {{- end }}
 {{- end }}
+
 
 {{/*
 Security Context for the deployment

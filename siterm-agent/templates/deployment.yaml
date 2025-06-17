@@ -2,22 +2,22 @@ apiVersion: apps/v1
 kind: {{ .Values.deploymentType }}
 metadata:
   labels:
-    k8s-app: {{ template "sitermagent.truncname" . }}
+    k8s-app: {{ template "sitermagent.name" . }}
     helm-version: {{ .Chart.Version }}
     helm-app-version: {{ .Chart.AppVersion }}
-  name: {{ template "sitermagent.truncname" . }}
+  name: {{ template "sitermagent.name" . }}
   namespace: {{ .Values.namespace}}
 spec:
   {{- if eq .Values.deploymentType "StatefulSet" }}
-  serviceName: {{ template "sitermagent.truncname" . }}
+  serviceName: {{ template "sitermagent.name" . }}
   {{- end }}
   selector:
     matchLabels:
-      k8s-app: {{ template "sitermagent.truncname" . }}
+      k8s-app: {{ template "sitermagent.name" . }}
   template:
     metadata:
       labels:
-        k8s-app: {{ template "sitermagent.truncname" . }}
+        k8s-app: {{ template "sitermagent.name" . }}
         helm-version: {{ .Chart.Version }}
         helm-app-version: {{ .Chart.AppVersion }}
     spec:
@@ -35,7 +35,7 @@ spec:
       {{- end }}
       {{- if .Values.logstorage.enabled }}
       initContainers:
-      - name: init-log-{{ template "sitermagent.truncname" . }}
+      - name: init-log-{{ template "sitermagent.name" . }}
         image: busybox
         command: ["sh", "-c", "mkdir -p /var/log/supervisor"]
         volumeMounts:
@@ -45,7 +45,7 @@ spec:
       containers:
       - image: {{ template "deploymentimage" . }}
         imagePullPolicy: {{ template "deploymentpullpolicy" . }}
-        name: {{ template "sitermagent.truncname" . }}
+        name: {{ template "sitermagent.name" . }}
         resources:
           limits:
             cpu: {{ template "cpulimit" . }}

@@ -2,22 +2,22 @@ apiVersion: apps/v1
 kind: {{ .Values.deploymentType }}
 metadata:
   labels:
-    k8s-app: {{ template "sitermdebugger.truncname" . }}
+    k8s-app: {{ template "sitermdebugger.name" . }}
     helm-version: {{ .Chart.Version }}
     helm-app-version: {{ .Chart.AppVersion }}
-  name: {{ template "sitermdebugger.truncname" . }}
+  name: {{ template "sitermdebugger.name" . }}
   namespace: {{ .Values.namespace}}
 spec:
   {{- if eq .Values.deploymentType "StatefulSet" }}
-  serviceName: {{ template "sitermdebugger.truncname" . }}
+  serviceName: {{ template "sitermdebugger.name" . }}
   {{- end }}
   selector:
     matchLabels:
-      k8s-app: {{ template "sitermdebugger.truncname" . }}
+      k8s-app: {{ template "sitermdebugger.name" . }}
   template:
     metadata:
       labels:
-        k8s-app: {{ template "sitermdebugger.truncname" . }}
+        k8s-app: {{ template "sitermdebugger.name" . }}
         helm-version: {{ .Chart.Version }}
         helm-app-version: {{ .Chart.AppVersion }}
       {{- if .Values.annotations }}
@@ -39,7 +39,7 @@ spec:
       {{- end }}
       {{- if (include "sitermdebugger.logstorageEnabled" . | trim | eq "true") }}
       initContainers:
-      - name: init-log-{{ template "sitermdebugger.truncname" . }}
+      - name: init-log-{{ template "sitermdebugger.name" . }}
         image: busybox
         command: ["sh", "-c", "mkdir -p /var/log/supervisor"]
         volumeMounts:
@@ -49,7 +49,7 @@ spec:
       containers:
       - image: {{ template "deploymentimage" . }}
         imagePullPolicy: {{ template "deploymentpullpolicy" . }}
-        name: {{ template "sitermdebugger.truncname" . }}
+        name: {{ template "sitermdebugger.name" . }}
         resources:
           limits:
             cpu: {{ template "cpulimit" . }}
