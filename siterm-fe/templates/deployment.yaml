@@ -5,10 +5,10 @@ apiVersion: apps/v1
 kind: {{ .Values.deploymentType }}
 metadata:
   labels:
-    run: run-{{ template "sitefe.truncname" . }}
+    k8s-app: {{ template "sitefe.truncname" . }}
     helm-version: {{ .Chart.Version }}
     helm-app-version: {{ .Chart.AppVersion }}
-  name: sense-{{ template "sitefe.truncname" . }}
+  name: {{ template "sitefe.truncname" . }}
   namespace: {{ .Values.namespace }}
 spec:
   {{- if eq .Values.deploymentType "StatefulSet" }}
@@ -17,11 +17,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      run: run-{{ template "sitefe.truncname" . }}
+      k8s-app: {{ template "sitefe.truncname" . }}
   template:
     metadata:
       labels:
-        run: run-{{ template "sitefe.truncname" . }}
+        k8s-app: {{ template "sitefe.truncname" . }}
         helm-version: {{ .Chart.Version }}
         helm-app-version: {{ .Chart.AppVersion }}
     spec:

@@ -99,9 +99,6 @@ spec:
         - mountPath: /run/lldpd/lldpd.socket
           name: lldpd-socket
           readOnly: true
-        - mountPath: /var/run/netns
-          name: run-netns
-          readOnly: true
       hostNetwork: true
       hostPID: true
       restartPolicy: Always
@@ -135,10 +132,6 @@ spec:
             path: /run/lldpd/lldpd.socket
             type: ""
           name: lldpd-socket
-        - hostPath:
-            path: /var/run/netns/
-            type: ""
-          name: run-netns
         {{- if .Values.logstorage.enabled }}
         - name: pvclog-{{ template "sitermagent.truncname" . }}
           persistentVolumeClaim:
