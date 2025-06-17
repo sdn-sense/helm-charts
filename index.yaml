@@ -3,34 +3,34 @@ entries:
   siterm-agent:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-06-17T07:48:24.772483-05:00"
+    created: "2025-06-17T09:27:31.503801-05:00"
     description: A Helm chart for Deploying SiteRM Agent Containers
-    digest: 15b805137a80c20eaaae7faf5d13f579f5cb0fefa714071e5819376609cbeca9
+    digest: 635dda3f314a58e680a7de7240c51a898b1c5bc5258cdfef8d4bb17176c0ae35
     name: siterm-agent
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-agent-1.5.34-rc07.tgz
-    version: 1.5.34-rc07
+    - https://sdn-sense.github.io/helm-charts/builds/siterm-agent-1.5.34-rc08.tgz
+    version: 1.5.34-rc08
   siterm-debugger:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-06-17T07:48:24.772885-05:00"
+    created: "2025-06-17T09:27:31.50554-05:00"
     description: A Helm chart for Deploying SiteRM Debugger Containers
-    digest: 30f7b21511811527e6cd6c245681226fa742ba10836af90aeaf7b6e1cb2387c6
+    digest: dba64ef227c2d1c26f0772e40870b1b7bf20e0a18aeb39651db5721a79fab782
     name: siterm-debugger
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-debugger-1.5.34-rc07.tgz
-    version: 1.5.34-rc07
+    - https://sdn-sense.github.io/helm-charts/builds/siterm-debugger-1.5.34-rc08.tgz
+    version: 1.5.34-rc08
   siterm-fe:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-06-17T07:48:24.773243-05:00"
+    created: "2025-06-17T09:27:31.505885-05:00"
     description: A Helm chart for Deploying SiteRM Frontend Containers
-    digest: 9a39005c51483c4d11d412b18268c6b68a67020174a535ba481bcee56718978e
+    digest: 1bffa24134514e1d7060d665dc463283ccedf661e0383059fabca0ba1ed2439d
     name: siterm-fe
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-fe-1.5.34-rc07.tgz
-    version: 1.5.34-rc07
-generated: "2025-06-17T07:48:24.77043-05:00"
+    - https://sdn-sense.github.io/helm-charts/builds/siterm-fe-1.5.34-rc08.tgz
+    version: 1.5.34-rc08
+generated: "2025-06-17T09:27:31.503119-05:00"
