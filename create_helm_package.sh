@@ -45,7 +45,7 @@ for CHART in "${CHARTS[@]}"; do
 done
 
 echo "Updating Helm repo index..."
-helm repo index "$BUILD_DIR" --url "$REPO_URL" --merge "$BASE_DIR/index.yaml"
+helm repo index "$BUILD_DIR" --url "$REPO_URL"
 mv "$BUILD_DIR/index.yaml" "$BASE_DIR/index.yaml"
 
 echo "======================================================================================"
