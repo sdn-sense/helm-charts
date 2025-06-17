@@ -1,27 +1,28 @@
 ---
-# SENSENAMEDEPLOY: sense-{{ template "sitefe.truncname" . }}
+# SENSENAMEDEPLOY: {{ template "sitefe.name" . }}
+# SENSEDEPLOYTYPE: {{ .Values.deploymentType }}
 # SENSENAMESPACE: {{ .Values.namespace }}
 apiVersion: apps/v1
 kind: {{ .Values.deploymentType }}
 metadata:
   labels:
-    k8s-app: {{ template "sitefe.truncname" . }}
+    k8s-app: {{ template "sitefe.name" . }}
     helm-version: {{ .Chart.Version }}
     helm-app-version: {{ .Chart.AppVersion }}
-  name: {{ template "sitefe.truncname" . }}
+  name: {{ template "sitefe.name" . }}
   namespace: {{ .Values.namespace }}
 spec:
   {{- if eq .Values.deploymentType "StatefulSet" }}
-  serviceName: {{ template "sitefe.truncname" . }}
+  serviceName: {{ template "sitefe.name" . }}
   {{- end }}
   replicas: 1
   selector:
     matchLabels:
-      k8s-app: {{ template "sitefe.truncname" . }}
+      k8s-app: {{ template "sitefe.name" . }}
   template:
     metadata:
       labels:
-        k8s-app: {{ template "sitefe.truncname" . }}
+        k8s-app: {{ template "sitefe.name" . }}
         helm-version: {{ .Chart.Version }}
         helm-app-version: {{ .Chart.AppVersion }}
     spec:
@@ -39,7 +40,7 @@ spec:
       {{- end }}
       {{- if .Values.logstorage.enabled }}
       initContainers:
-      - name: init-log-{{ template "sitefe.truncname" . }}
+      - name: init-log-{{ template "sitefe.name" . }}
         image: busybox
         command: ["sh", "-c", "mkdir -p /var/log/supervisor /var/log/httpd /var/log/mariadb/"]
         volumeMounts:
@@ -49,7 +50,7 @@ spec:
       containers:
       - image: {{ template "deploymentimage" . }}
         imagePullPolicy: {{ template "deploymentpullpolicy" . }}
-        name: pod-{{ template "sitefe.truncname" . }}
+        name: pod-{{ template "sitefe.name" . }}
         ports:
         - containerPort: 80
           protocol: TCP
