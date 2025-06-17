@@ -10,7 +10,7 @@ data:
     BRANCH: {{ .Values.branch }}
     SITENAME: {{ .Values.sitename }}
 {{- if .Values.md5 }}
-    {{- if eq .Values.deploymentType "Deployment" }}
+{{- if or (eq .Values.deploymentType "StatefulSet") (eq .Values.deploymentType "Deployment") }}
     MD5: {{ .Values.md5 }}
-    {{- end }}
+{{- end }}
 {{- end }}

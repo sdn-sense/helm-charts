@@ -7,9 +7,10 @@ namespace: sense
 
 # Deployment Type:
 # Available Options are:
-#    Deployment - Deploy on one specific node
+#    Deployment - Deploy on one specific node. Use kind Deployment
 #    DaemonSet - Deploy on all available nodes
-deploymentType: Deployment
+#    StatefulSet - Use StatefulSet (Most prefered if PVC ReadWriteOnce) 
+deploymentType: StatefulSet
 
 # Image to run. Helm charts run same image as helm version by default.
 # If you helm chart installed is 0.1.46 - it will use latest-1.4.6 image

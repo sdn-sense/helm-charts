@@ -7,9 +7,10 @@ namespace: sense
 
 # Deployment Type:
 # Available Options are:
-#    Deployment - Deploy on one specific node
+#    Deployment - Deploy on one specific node. Use kind Deployment
 #    DaemonSet - Deploy on all available nodes
-deploymentType: Deployment
+#    StatefulSet - Use StatefulSet (Most prefered if PVC ReadWriteOnce) 
+deploymentType: StatefulSet
 
 # Annotations:
 # Add any needed annotations to deployment; This is useful for Multus and Debugger
@@ -77,6 +78,7 @@ memoryRequest: 1Gi
 #    - NET_ADMIN
 
 # Enable hostNetwork. This is by default True
+# In case you use Multus Network, this needs 
 #hostNetwork: true
 # Enable hostPID. This is by default False
 #hostPID: false

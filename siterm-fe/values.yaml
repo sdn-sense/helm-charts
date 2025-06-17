@@ -2,6 +2,12 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# Deployment Type:
+# Available Options are:
+#    Deployment - Deploy on one specific node. Use kind Deployment
+#    StatefulSet - Use StatefulSet (Most prefered if PVC ReadWriteOnce) 
+deploymentType: StatefulSet
+
 # Namespace to deploy into.
 namespace: sense
 

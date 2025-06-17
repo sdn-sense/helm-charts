@@ -8,6 +8,9 @@ metadata:
   name: {{ template "sitermagent.truncname" . }}
   namespace: {{ .Values.namespace}}
 spec:
+  {{- if eq .Values.deploymentType "StatefulSet" }}
+  serviceName: {{ template "sitermagent.truncname" . }}
+  {{- end }}
   selector:
     matchLabels:
       k8s-app: {{ template "sitermagent.truncname" . }}
@@ -26,7 +29,7 @@ spec:
       affinity:
         {{ .Values.affinity | toYaml | indent 8 | trim }}
       {{- end }}
-      {{- if and (.Values.nodeSelector) (eq .Values.deploymentType "Deployment")}}
+      {{- if and .Values.nodeSelector (or (eq .Values.deploymentType "StatefulSet") (eq .Values.deploymentType "Deployment")) }}
       nodeSelector:
         {{ .Values.nodeSelector | toYaml | indent 8 | trim }}
       {{- end }}

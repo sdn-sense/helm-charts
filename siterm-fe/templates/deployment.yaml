@@ -2,7 +2,7 @@
 # SENSENAMEDEPLOY: sense-{{ template "sitefe.truncname" . }}
 # SENSENAMESPACE: {{ .Values.namespace }}
 apiVersion: apps/v1
-kind: Deployment
+kind: {{ .Values.deploymentType }}
 metadata:
   labels:
     run: run-{{ template "sitefe.truncname" . }}
@@ -11,6 +11,9 @@ metadata:
   name: sense-{{ template "sitefe.truncname" . }}
   namespace: {{ .Values.namespace }}
 spec:
+  {{- if eq .Values.deploymentType "StatefulSet" }}
+  serviceName: {{ template "sitefe.truncname" . }}
+  {{- end }}
   replicas: 1
   selector:
     matchLabels:

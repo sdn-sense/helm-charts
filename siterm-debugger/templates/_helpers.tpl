@@ -70,7 +70,7 @@ Expand the name of the chart.
 
 {{- define "sitermagent.truncname" -}}
 {{- if .Values.md5 }}
-{{- if eq .Values.deploymentType "Deployment" }}
+{{- if or (eq .Values.deploymentType "StatefulSet") (eq .Values.deploymentType "Deployment") }}
 {{- printf "siterm-agent-conf-%s" .Values.md5 | replace "_" "-" | trunc 53 | trimSuffix "-" }}
 {{- else }}
 {{- printf "siterm-agent-conf-%s" .Values.deploymentType | replace "_" "-" | trunc 53 | trimSuffix "-" | lower }}
@@ -87,7 +87,7 @@ This is to ensure that the siterm-debug chart can be used with the same configur
 {{- define "sitermdebugger.truncname" -}}
 {{- $baseName := default .Chart.Name .Values.customPodName }}
 {{- if .Values.md5 }}
-{{- if eq .Values.deploymentType "Deployment" }}
+{{- if or (eq .Values.deploymentType "StatefulSet") (eq .Values.deploymentType "Deployment") }}
 {{- printf "%s-conf-%s" $baseName .Values.md5 | replace "_" "-" | trunc 53 | trimSuffix "-" }}
 {{- else }}
 {{- printf "%s-conf-%s" $baseName .Values.deploymentType | replace "_" "-" | trunc 53 | trimSuffix "-" | lower }}
@@ -199,6 +199,6 @@ Validation check: DaemonSet cannot be used if logstorage.enabled is true
 {{- define "sitermdebugger.validateDeploymentType" -}}
 {{- $logEnabled := (include "sitermdebugger.logstorageEnabled" .) | trim | eq "true" }}
 {{- if and (eq .Values.deploymentType "DaemonSet") $logEnabled }}
-  {{- fail "Error: 'DaemonSet' deployment type cannot be used when 'logstorage.enabled' is true. Please disable logstorage or change deploymentType to 'Deployment'." }}
+  {{- fail "Error: 'DaemonSet' deployment type cannot be used when 'logstorage.enabled' is true. Please disable logstorage or change deploymentType to 'StatefulSet' or 'Deployment'." }}
 {{- end }}
 {{- end }}
