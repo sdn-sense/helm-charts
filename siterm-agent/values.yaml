@@ -98,6 +98,21 @@ readiness:
   successThreshold: 1
   timeoutSeconds: 30
 
+
+# Enable mounting lldpd socket to Agent.
+# This is required to allow Agent to read LLDP information from the network.
+# If lldpd is not enabled on the host, this must be set to false.
+# If that is set to false - SiteRM Agent will start lldpd daemon inside the container.
+# Default is true.
+#lldpd:
+#  enabled: false
+
+# Enable mounting /etc/iproute2/rt_tables file to Agent.
+# This is required to allow Agent to read routing tables and use them for routing.
+# If that is set to false - SiteRM Agent will not be able to read routing tables.
+#rttables:
+#  enabled: false
+
 # Enable creation of ClusterRole and ClusterRoleBinding for Agent.
 # This is required to allow Agent to read node labels and other information.
 clusterrole:

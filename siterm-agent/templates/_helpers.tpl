@@ -127,6 +127,32 @@ Evaluate whether logstorage.enabled is true
 {{- end }}
 
 {{/*
+Set lldpd daemon enabled flag. Default True
+*/}}
+{{- define "sitermagent.lldpEnabled" -}}
+{{- $enabled := true }}
+{{- if and (not (kindIs "invalid" .Values.lldpd)) (kindIs "map" .Values.lldpd) }}
+  {{- if hasKey .Values.lldpd "enabled" }}
+    {{- $enabled = .Values.lldpd.enabled }}
+  {{- end }}
+{{- end }}
+{{- ternary "true" "false" $enabled }}
+{{- end }}
+
+{{/*
+Set iproute/rt_tables enabled flag. Default True
+*/}}
+{{- define "sitermagent.rttablesEnabled" -}}
+{{- $enabled := true }}
+{{- if and (not (kindIs "invalid" .Values.rttables)) (kindIs "map" .Values.rttables) }}
+  {{- if hasKey .Values.rttables "enabled" }}
+    {{- $enabled = .Values.rttables.enabled }}
+  {{- end }}
+{{- end }}
+{{- ternary "true" "false" $enabled }}
+{{- end }}
+
+{{/*
 Validation check: DaemonSet cannot be used if logstorage.enabled is true
 */}}
 {{- define "sitermagent.validateDeploymentType" -}}

@@ -78,7 +78,7 @@ spec:
           timeoutSeconds: {{ .Values.readiness.timeoutSeconds }}
         {{- end }}
         volumeMounts:
-        {{- if .Values.logstorage.enabled }}
+        {{- if (include "sitermagent.logstorageEnabled" . | trim | eq "true") }}
         - mountPath: /var/log/
           name: pvclog-{{ template "sitermagent.truncname" . }}
         {{- end }}
@@ -93,12 +93,16 @@ spec:
           name: agent-hostkey
           readOnly: true
           subPath: hostkey.pem
+        {{- if (include "sitermagent.rttablesEnabled" . | trim | eq "true") }}
         - mountPath: /etc/iproute2/rt_tables
           name: etc-iproute2
           readOnly: true
+        {{- end }}
+        {{- if (include "sitermagent.lldpEnabled" . | trim | eq "true") }}
         - mountPath: /run/lldpd/lldpd.socket
           name: lldpd-socket
           readOnly: true
+        {{- end }}
       hostNetwork: true
       hostPID: true
       restartPolicy: Always
@@ -124,15 +128,19 @@ spec:
               path: sense-siterm-agent.yaml
             name: conf-{{ template "sitermagent.truncname" . }}
           name: conf-{{ template "sitermagent.truncname" . }}
+        {{- if (include "sitermagent.rttablesEnabled" . | trim | eq "true") }}
         - hostPath:
             path: /etc/iproute2/rt_tables
-            type: ""
+            type: File
           name: etc-iproute2
+        {{- end }}
+        {{- if (include "sitermagent.lldpEnabled" . | trim | eq "true") }}
         - hostPath:
             path: /run/lldpd/lldpd.socket
-            type: ""
+            type: Socket
           name: lldpd-socket
-        {{- if .Values.logstorage.enabled }}
+        {{- end }}
+        {{- if (include "sitermagent.logstorageEnabled" . | trim | eq "true") }}
         - name: pvclog-{{ template "sitermagent.truncname" . }}
           persistentVolumeClaim:
             claimName: {{ .Values.logstorage.volname | default (printf "pvclog-%s" (include "sitermagent.truncname" .)) }}
