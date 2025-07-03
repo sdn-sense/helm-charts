@@ -30,6 +30,17 @@ Define Deployment pull policy
 {{- end }}
 
 {{/*
+Define Deployment OS release
+*/}}
+{{- define "deploymentosrelease" -}}
+{{- if .Values.osrelease }}
+{{- printf "%s" .Values.osrelease }}
+{{- else }}
+{{- printf "el10"}}
+{{- end }}
+{{- end }}
+
+{{/*
 Define CPU and Memory Limits/Requests
 */}}
 {{- define "cpulimit" -}}
@@ -143,11 +154,8 @@ Set lldpd daemon enabled flag. Default True
 Set default lldpd daemon path, /var/run/lldpd.sock, allow to override
 */}}
 {{- define "sitermagent.lldpPath" -}}
-{{- if .Values.lldpd.path }}
-{{- .Values.lldpd.path }}
-{{- else }}
-/var/run/lldpd.sock
-{{- end }}
+{{- $lldpd := .Values.lldpd | default dict -}}
+{{- $lldpd.path | default "/var/run/lldpd.sock" -}}
 {{- end }}
 
 {{/*
@@ -167,13 +175,9 @@ Set iproute/rt_tables enabled flag. Default True
 Set default iproute/rt_tables path, /etc/iproute2/rt_tables, allow to override
 */}}
 {{- define "sitermagent.rttablesPath" -}}
-{{- if .Values.rttables.path }}
-{{- .Values.rttables.path }}
-{{- else }}
-/etc/iproute2/rt_tables
+{{- $rttables := .Values.rttables | default dict -}}
+{{- $rttables.path | default "/etc/iproute2/rt_tables" -}}
 {{- end }}
-{{- end }}
-
 {{/*
 Validation check: DaemonSet cannot be used if logstorage.enabled is true
 */}}

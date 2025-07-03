@@ -43,7 +43,7 @@ spec:
           mountPath: /var/log
       {{- end }}
       containers:
-      - image: {{ template "deploymentimage" . }}
+      - image: {{ template "deploymentimage" . }}-{{ template "deploymentosrelease" . }}
         imagePullPolicy: {{ template "deploymentpullpolicy" . }}
         name: {{ template "sitermagent.name" . }}
         resources:
@@ -130,13 +130,13 @@ spec:
           name: conf-{{ template "sitermagent.truncname" . }}
         {{- if (include "sitermagent.rttablesEnabled" . | trim | eq "true") }}
         - hostPath:
-            path: {{- include "sitermagent.rttablesPath" . | trim }}
+            path: {{ include "sitermagent.rttablesPath" . | quote }}
             type: File
           name: etc-iproute2
         {{- end }}
         {{- if (include "sitermagent.lldpEnabled" . | trim | eq "true") }}
         - hostPath:
-            path: {{- include "sitermagent.lldpPath" . | trim }}
+            path: {{ include "sitermagent.lldpPath" . | quote }}
             type: Socket
           name: lldpd-socket
         {{- end }}

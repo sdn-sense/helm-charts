@@ -19,9 +19,13 @@ deploymentType: StatefulSet
 # latest - Latest stable version (might be not from same helm release and missing Helm features)
 # dev - Development release (use with caution)
 # pullPolicy: Always - Always pull image from repository (that is default) Overwrite if needed.
+
 #image:
 #  pullPolicy: Always
 #  image: latest-20240614
+# osrelease: el8, el9, el10 - OS release to use for Agent. Default is el10.
+#           For lldpd daemon to work properly, might require to enforce a specific OS release.
+#osrelease: el10
 
 # Resources for Agent. This should not require any changes.
 # Defaults below (no need to uncomment and those will be used by helm chart)

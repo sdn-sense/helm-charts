@@ -3,34 +3,34 @@ entries:
   siterm-agent:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-07-03T06:37:57.952889-05:00"
+    created: "2025-07-03T10:26:53.043156-05:00"
     description: A Helm chart for Deploying SiteRM Agent Containers
-    digest: 48d8fe26dbabd960ab0c1c7d6b65b6cf4937cecb9afbca0686f6deb702aaeee1
+    digest: 943d3d3e79d133bdb2cd584d0455aed965c7e72f10a28c1a48977ead61c96233
     name: siterm-agent
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-agent-1.5.34-rc10.tgz
-    version: 1.5.34-rc10
+    - https://sdn-sense.github.io/helm-charts/builds/siterm-agent-1.5.34-rc11.tgz
+    version: 1.5.34-rc11
   siterm-debugger:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-07-03T06:37:57.953293-05:00"
+    created: "2025-07-03T10:26:53.0436-05:00"
     description: A Helm chart for Deploying SiteRM Debugger Containers
-    digest: 516429c3494af3e352bfcf87a980596d7aa516af5de930b887284a3413733f7b
+    digest: dfd32a17cfa19c5c7d8993407b41cfcc858b29f59aabf3821edff9b7f89106af
     name: siterm-debugger
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-debugger-1.5.34-rc10.tgz
-    version: 1.5.34-rc10
+    - https://sdn-sense.github.io/helm-charts/builds/siterm-debugger-1.5.34-rc11.tgz
+    version: 1.5.34-rc11
   siterm-fe:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-07-03T06:37:57.953641-05:00"
+    created: "2025-07-03T10:26:53.043951-05:00"
     description: A Helm chart for Deploying SiteRM Frontend Containers
-    digest: a0e336c7669acc8e6a713819e1ab5daf05e57af8c1ce23451423a28ef8a37cca
+    digest: bfa676fd14a1ba4552472df5ac5b384373e4801f34ccc710a13a08aec337aa0e
     name: siterm-fe
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-fe-1.5.34-rc10.tgz
-    version: 1.5.34-rc10
-generated: "2025-07-03T06:37:57.950492-05:00"
+    - https://sdn-sense.github.io/helm-charts/builds/siterm-fe-1.5.34-rc11.tgz
+    version: 1.5.34-rc11
+generated: "2025-07-03T10:26:53.034734-05:00"
