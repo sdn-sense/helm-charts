@@ -139,6 +139,17 @@ Set lldpd daemon enabled flag. Default True
 {{- ternary "true" "false" $enabled }}
 {{- end }}
 
+{{/*}}
+Set default lldpd daemon path, /var/run/lldpd.sock, allow to override
+*/}}
+{{- define "sitermagent.lldpPath" -}}
+{{- if .Values.lldpd.path }}
+{{- .Values.lldpd.path }}
+{{- else }}
+/var/run/lldpd.sock
+{{- end }}
+{{- end }}
+
 {{/*
 Set iproute/rt_tables enabled flag. Default True
 */}}
@@ -150,6 +161,17 @@ Set iproute/rt_tables enabled flag. Default True
   {{- end }}
 {{- end }}
 {{- ternary "true" "false" $enabled }}
+{{- end }}
+
+{{/*
+Set default iproute/rt_tables path, /etc/iproute2/rt_tables, allow to override
+*/}}
+{{- define "sitermagent.rttablesPath" -}}
+{{- if .Values.rttables.path }}
+{{- .Values.rttables.path }}
+{{- else }}
+/etc/iproute2/rt_tables
+{{- end }}
 {{- end }}
 
 {{/*

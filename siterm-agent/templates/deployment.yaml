@@ -130,13 +130,13 @@ spec:
           name: conf-{{ template "sitermagent.truncname" . }}
         {{- if (include "sitermagent.rttablesEnabled" . | trim | eq "true") }}
         - hostPath:
-            path: /etc/iproute2/rt_tables
+            path: {{- include "sitermagent.rttablesPath" . | trim }}
             type: File
           name: etc-iproute2
         {{- end }}
         {{- if (include "sitermagent.lldpEnabled" . | trim | eq "true") }}
         - hostPath:
-            path: /run/lldpd/lldpd.socket
+            path: {{- include "sitermagent.lldpPath" . | trim }}
             type: Socket
           name: lldpd-socket
         {{- end }}

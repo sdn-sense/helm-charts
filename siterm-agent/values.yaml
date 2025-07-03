@@ -104,14 +104,18 @@ readiness:
 # If lldpd is not enabled on the host, this must be set to false.
 # If that is set to false - SiteRM Agent will start lldpd daemon inside the container.
 # Default is true.
+# path - defaults to /var/run/lldpd.sock. Overwrite it if you have different path for lldpd daemon socket.
 #lldpd:
 #  enabled: false
+#  path: /var/run/lldpd.sock
 
 # Enable mounting /etc/iproute2/rt_tables file to Agent.
 # This is required to allow Agent to read routing tables and use them for routing.
 # If that is set to false - SiteRM Agent will not be able to read routing tables.
+# path - defaults to /etc/iproute2/rt_tables. Overwrite it if you have different path for rt_tables file.
 #rttables:
 #  enabled: false
+#  path: /etc/iproute2/rt_tables
 
 # Enable creation of ClusterRole and ClusterRoleBinding for Agent.
 # This is required to allow Agent to read node labels and other information.
