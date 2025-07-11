@@ -103,20 +103,26 @@ readiness:
   timeoutSeconds: 30
 
 
-# Enable mounting lldpd socket to Agent.
-# This is required to allow Agent to read LLDP information from the network.
-# If lldpd is not enabled on the host, this must be set to false.
-# If that is set to false - SiteRM Agent will start lldpd daemon inside the container.
+# Enable mounting LLDPD socket to Agent.
+# This is required to allow Agent to read LLDP information from the network interface.
+# If LLDPD Daemon is running on the host, this must be set to true. (True is default)
+# If LLDPD Daemon is not running on the host, this must be set to false.
+# If that is set to false - SiteRM Agent will start LLDPD daemon inside the container.
+# NOTE: Recommendation is to run only 1 LLDPD daemon on the host, so if you have LLDPD running on the host - set this to true.
 # Default is true.
-# path - defaults to /var/run/lldpd.sock. Overwrite it if you have different path for lldpd daemon socket.
+# path - defaults to /var/run/lldpd.sock. Overwrite it if you have different path for LLDPD daemon socket.
+# e.g. EL versions use /var/run/lldpd.sock, Ubuntu uses /run/lldpd.socket (check and make sure that path is correct)
 #lldpd:
 #  enabled: false
 #  path: /var/run/lldpd.sock
 
 # Enable mounting /etc/iproute2/rt_tables file to Agent.
-# This is required to allow Agent to read routing tables and use them for routing.
-# If that is set to false - SiteRM Agent will not be able to read routing tables.
+# This is required to allow Agent to read routing tables and use them for routing commands.
+# In case you have routing tables defined in /etc/iproute2/rt_tables file, this must be set to true.
+# If you do not have routing tables defined in /etc/iproute2/rt_tables file, set this to false
+# Default is false. (most cases Kube uses private network namespaces and does not require routing tables)
 # path - defaults to /etc/iproute2/rt_tables. Overwrite it if you have different path for rt_tables file.
+# Default is false, which means that routing tables are not used. (In most cases Kube uses private network namespaces and does not require routing tables)
 #rttables:
 #  enabled: false
 #  path: /etc/iproute2/rt_tables

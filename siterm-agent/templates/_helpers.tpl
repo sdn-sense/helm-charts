@@ -6,10 +6,10 @@ Define Deployment image
 {{- if .Values.image.image }}
 {{- printf "sdnsense/siterm-agent:%s" .Values.image.image }}
 {{- else }}
-{{- printf "sdnsense/siterm-agent:stage" }}
+{{- printf "sdnsense/siterm-agent:dev" }}
 {{- end }}
 {{- else }}
-{{- printf "sdnsense/siterm-agent:stage" }}
+{{- printf "sdnsense/siterm-agent:dev" }}
 {{- end }}
 {{- end }}
 
@@ -159,10 +159,10 @@ Set default lldpd daemon path, /var/run/lldpd.sock, allow to override
 {{- end }}
 
 {{/*
-Set iproute/rt_tables enabled flag. Default True
+Set iproute/rt_tables enabled flag. Default False
 */}}
 {{- define "sitermagent.rttablesEnabled" -}}
-{{- $enabled := true }}
+{{- $enabled := false }}
 {{- if and (not (kindIs "invalid" .Values.rttables)) (kindIs "map" .Values.rttables) }}
   {{- if hasKey .Values.rttables "enabled" }}
     {{- $enabled = .Values.rttables.enabled }}
