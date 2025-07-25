@@ -23,7 +23,7 @@ deploymentType: StatefulSet
 #image:
 #  pullPolicy: Always
 #  image: latest-20240614
-# ==================
+
 #osrelease: el8, el9, el10 - OS release to use for Agent. The default is el10.
 #           For the lldpd daemon to work properly, it might require enforcing a specific OS release.
 #osrelease: el10. # NOTE: This value is at the top level. Not under the image.
