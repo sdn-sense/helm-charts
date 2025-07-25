@@ -23,9 +23,10 @@ deploymentType: StatefulSet
 #image:
 #  pullPolicy: Always
 #  image: latest-20240614
-# osrelease: el8, el9, el10 - OS release to use for Agent. Default is el10.
-#           For lldpd daemon to work properly, might require to enforce a specific OS release.
-#osrelease: el10
+# ==================
+#osrelease: el8, el9, el10 - OS release to use for Agent. The default is el10.
+#           For the lldpd daemon to work properly, it might require enforcing a specific OS release.
+#osrelease: el10. # NOTE: This value is at the top level. Not under the image.
 
 # Resources for Agent. This should not require any changes.
 # Defaults below (no need to uncomment and those will be used by helm chart)
