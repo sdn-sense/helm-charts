@@ -31,6 +31,10 @@ namespace: sense
 #cpuRequest: 2
 #memoryRequest: 4Gi
 
+# Priority Class Name for your deployment. Uncomment and set if you have priority class defined in your cluster.
+# See https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/ for more details
+#priorityClassName: "somename"
+
 # Persistent volume claim for Frontend.
 # This should not require any changes if you run ceph and no others are supported yet.
 # If you have another storage class, change it (no guarantees to work and might need manual configuration)

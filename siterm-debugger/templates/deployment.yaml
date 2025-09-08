@@ -37,6 +37,9 @@ spec:
       nodeSelector:
         {{ .Values.nodeSelector | toYaml | indent 8 | trim }}
       {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- end }}
       {{- if (include "sitermdebugger.logstorageEnabled" . | trim | eq "true") }}
       initContainers:
       - name: init-log-{{ template "sitermdebugger.name" . }}

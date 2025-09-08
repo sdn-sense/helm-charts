@@ -38,6 +38,9 @@ spec:
       nodeSelector:
         {{ .Values.nodeSelector | toYaml | indent 8 | trim }}
       {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- end }}
       {{- if .Values.logstorage.enabled }}
       initContainers:
       - name: init-log-{{ template "sitefe.name" . }}
