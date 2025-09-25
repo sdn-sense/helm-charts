@@ -7,8 +7,15 @@ metadata:
 data:
   sense-siterm-fe: |
     ---
+{{- if .Values.gitrepo }}
     GIT_REPO: {{ .Values.gitrepo }}
-    BRANCH: {{ .Values.branch }}
+{{- end }}
+{{- if .Values.gitbranch }}
+    GIT_BRANCH: {{ .Values.gitbranch }}
+{{- end }}
+{{- if .Values.giturl }}
+    GIT_URL: {{ .Values.giturl }}
+{{- end }}
     SITENAME: {{ .Values.sitename }}
 {{- if .Values.md5 }}
     MD5: {{ .Values.md5 }}

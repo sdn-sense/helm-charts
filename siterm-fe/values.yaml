@@ -63,11 +63,8 @@ logstorage:
 #     value: "value"
 #     effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
 
-# Node Selector for your deployment. Required to set if deploymentType is Deployment:
+# Node Selector for your deployment.
 nodeSelector: {}
-#nodeSelector:
-#  kubernetes.io/hostname: node-2-7.sdsc.optiputer.net
-# In case of DaemonSet - it will be ignored.
 
 # Affinity for your deployment. Include as many as you need and it will
 # be added to your deployment file.
@@ -110,16 +107,21 @@ ingress:
   host: <REPLACE_ME_TO_FQDN>
 #  annotations:
 #    kubernetes.io/ingress.class: haproxy
-#    kubernetes.io/ssl-passthrough: "true"
+#    kubernetes.io/ssl-passthrough: "true" # SSL Passthrough is required for haproxy ingress
 #    cert-manager.io/cluster-issuer: letsencrypt-prod
 
 # ===============================================================
 # Configuration parameters for Frontend:
 # These must be defined and configured here: https://github.com/sdn-sense/rm-configs
 sitename: <REPLACE_ME_TO_SITENAME>
-gitrepo: "sdn-sense/rm-configs"
-branch: master
 md5: <REPLACE_ME_TO_UUID>
+# Location of git repository with configuration files
+# Usually you do not need to change those, as defaults are correct.
+#gitrepo: "sdn-sense/rm-configs"
+#gitbranch: master
+#giturl: "https://raw.githubusercontent.com/"
+
+
 
 # Sadly, helm does not allow to include files outside of chart
 # So local files are not possible to include. Modify the following

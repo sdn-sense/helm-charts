@@ -52,8 +52,9 @@ memoryRequest: 1Gi
 #  effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
 
 # Node Selector for your deployment.
-#nodeSelector:
-#  kubernetes.io/hostname: hostname-replace-me-if-deployment
+# Required to set if deploymentType is Deployment or StatefulSet:
+nodeSelector:
+  kubernetes.io/hostname: hostname-replace-me-if-deployment
 # In case of DaemonSet - it will be ignored.
 
 # Affinity for your deployment. Include as many as you need and it will
@@ -103,8 +104,9 @@ memoryRequest: 1Gi
 
 # Enable creation of ClusterRole and ClusterRoleBinding for Agent.
 # This is required to allow Agent to read node labels and other information.
-clusterrole:
-  enabled: true
+# Only required if you use kubernetes labels to define isAlias.
+#clusterrole:
+#  enabled: true
 
 # Liveness and readiness probes for deployment.
 # Liveness probe for your deployment. It checks if agent is running and healthy.
@@ -130,8 +132,6 @@ readiness:
 # Configuration parameters for Agent(s):
 # These must be defined and configured here: https://github.com/sdn-sense/rm-configs
 sitename: <REPLACE_ME_TO_SITENAME>
-gitrepo: "sdn-sense/rm-configs"
-branch: master
 # NOTE: In case deploymentType is DaemonSet - comment out md5 line;
 #       In DaemonSet deployment agent looks automatically for md5 using hostname
 #       and md5 defined here will not be used.
@@ -139,6 +139,12 @@ branch: master
 #       If deploymentType is Deployment - uncomment md5 line and define md5 here.
 #       md5 should be defined for a site under <gitrepo>/<branch>
 md5: <REPLACE_ME_TO_UUID>
+# Location of git repository with configuration files
+# Usually you do not need to change those, as defaults are correct.
+#gitrepo: "sdn-sense/rm-configs"
+#gitbranch: master
+#giturl: "https://raw.githubusercontent.com/"
+
 
 # SSL Certificate parameters:
 # It does support getting certificate from cert-manager or

@@ -6,8 +6,15 @@ metadata:
 data:
   sense-siterm-agent: |
     ---
+{{- if .Values.gitrepo }}
     GIT_REPO: {{ .Values.gitrepo }}
-    BRANCH: {{ .Values.branch }}
+{{- end }}
+{{- if .Values.gitbranch }}
+    GIT_BRANCH: {{ .Values.gitbranch }}
+{{- end }}
+{{- if .Values.giturl }}
+    GIT_URL: {{ .Values.giturl }}
+{{- end }}
     SITENAME: {{ .Values.sitename }}
 {{- if .Values.md5 }}
 {{- if or (eq .Values.deploymentType "StatefulSet") (eq .Values.deploymentType "Deployment") }}
