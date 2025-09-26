@@ -2,5 +2,5 @@ apiVersion: v2
 name: siterm-debugger
 description: A Helm chart for Deploying SiteRM Debugger Containers
 type: application
-version: 1.5.51
+version: 1.5.60-rc01
 appVersion: "1.16.0"
