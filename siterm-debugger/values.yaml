@@ -31,7 +31,9 @@ deploymentType: StatefulSet
 # latest - Latest stable version (might be not from same helm release and missing Helm features)
 # dev - Development release (use with caution)
 # pullPolicy: Always - Always pull image from repository (that is default) Overwrite if needed.
+# Default registry is quay.io if not set.
 #image:
+#  registy: docker.io, quay.io - Default is quay.io if not set
 #  pullPolicy: Always
 #  image: latest-20240614
 
@@ -79,7 +81,7 @@ nodeSelector:
 #    - NET_ADMIN
 
 # Enable hostNetwork. This is by default True
-# In case you use Multus Network, this needs 
+# In case you use Multus Network, this needs to be set false
 #hostNetwork: true
 # Enable hostPID. This is by default False
 #hostPID: false

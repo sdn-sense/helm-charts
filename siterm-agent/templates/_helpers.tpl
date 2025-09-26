@@ -1,3 +1,18 @@
+{{- /* 
+Define default registry if not set in values.yaml
+*/ -}}
+{{- define "defaultregistry" -}}
+{{- if .Values.image }}
+{{- if .Values.image.registry }}
+{{- printf "%s" .Values.image.registry }}
+{{- else }}
+{{- printf "quay.io" }}
+{{- end }}
+{{- else }}
+{{- printf "quay.io" }}
+{{- end }}
+{{- end }}
+
 {{/*
 Define Deployment image
 */}}
@@ -12,6 +27,22 @@ Define Deployment image
 {{- printf "sdnsense/siterm-agent:latest" }}
 {{- end }}
 {{- end }}
+
+{{/*
+Define Deployment image for debugger
+*/}}
+{{- define "deploymentimagedebug" -}}
+{{- if .Values.image }}
+{{- if .Values.image.image }}
+{{- printf "sdnsense/siterm-debugger:%s" .Values.image.image }}
+{{- else }}
+{{- printf "sdnsense/siterm-debugger:latest" }}
+{{- end }}
+{{- else }}
+{{- printf "sdnsense/siterm-debugger:latest" }}
+{{- end }}
+{{- end }}
+
 
 {{/*
 Define Deployment pull policy
@@ -41,7 +72,7 @@ Define Deployment OS release
 {{- end }}
 
 {{/*
-Define CPU and Memory Limits/Requests
+Define CPU and Memory Limits/Requests for Agent
 */}}
 {{- define "cpulimit" -}}
 {{- if .Values.cpuLimit }}
@@ -73,6 +104,53 @@ Define CPU and Memory Limits/Requests
 {{- else }}
 {{- printf "1Gi"}}
 {{- end }}
+{{- end }}
+
+
+{{/*
+Define CPU and Memory Limits/Requests for Debugger
+*/}}
+{{- define "cpulimitdebugger" -}}
+{{- if .Values.cpuLimitdebugger }}
+{{- toString .Values.cpuLimitdebugger }}
+{{- else }}
+{{- printf "16"}}
+{{- end }}
+{{- end }}
+
+{{- define "cpuRequestdebugger" -}}
+{{- if .Values.cpuRequestdebugger }}
+{{- toString .Values.cpuRequestdebugger }}
+{{- else }}
+{{- printf "600m"}}
+{{- end }}
+{{- end }}
+
+{{- define "memorylimitdebugger" -}}
+{{- if .Values.memoryLimitdebugger }}
+{{- toString .Values.memoryLimitdebugger }}
+{{- else }}
+{{- printf "32Gi"}}
+{{- end }}
+{{- end }}
+
+{{- define "memoryRequestdebugger" -}}
+{{- if .Values.memoryRequestdebugger }}
+{{- toString .Values.memoryRequestdebugger }}
+{{- else }}
+{{- printf "1Gi"}}
+{{- end }}
+{{- end }}
+
+{{/*
+Evaluate whether deploydebugger is enabled, default true.
+*/}}
+{{- define "sitermagent.deploydebuggerEnabled" -}}
+{{- $enabled := true }} {{/* default true */}}
+{{- if not (kindIs "invalid" .Values.deploydebugger) }}
+  {{- $enabled = .Values.deploydebugger }}
+{{- end }}
+{{- ternary "true" "false" $enabled }}
 {{- end }}
 
 {{/*

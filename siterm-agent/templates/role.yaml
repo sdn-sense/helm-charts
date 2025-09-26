@@ -1,4 +1,4 @@
-{{- if .Values.clusterrole.enabled -}}
+{{- if (default dict .Values.clusterrole).enabled }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

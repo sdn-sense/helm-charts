@@ -1,3 +1,18 @@
+{{- /* 
+Define default registry if not set in values.yaml
+*/ -}}
+{{- define "defaultregistry" -}}
+{{- if .Values.image }}
+{{- if .Values.image.registry }}
+{{- printf "%s" .Values.image.registry }}
+{{- else }}
+{{- printf "quay.io" }}
+{{- end }}
+{{- else }}
+{{- printf "quay.io" }}
+{{- end }}
+{{- end }}
+
 {{/*
 Define Deployment image
 */}}

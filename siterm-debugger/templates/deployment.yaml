@@ -50,7 +50,7 @@ spec:
           mountPath: /var/log
       {{- end }}
       containers:
-      - image: {{ template "deploymentimage" . }}
+      - image: {{ template "defaultregistry" . }}/{{ template "deploymentimage" . }}
         imagePullPolicy: {{ template "deploymentpullpolicy" . }}
         name: {{ template "sitermdebugger.name" . }}
         resources:

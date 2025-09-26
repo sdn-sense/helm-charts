@@ -19,8 +19,10 @@ deploymentType: StatefulSet
 # latest - Latest stable version (might be not from same helm release and missing Helm features)
 # dev - Development release (use with caution)
 # pullPolicy: Always - Always pull image from repository (that is default) Overwrite if needed.
+# Default registry is quay.io if not set.
 
 #image:
+#  registy: docker.io, quay.io - Default is quay.io if not set
 #  pullPolicy: Always
 #  image: latest-20240614
 
@@ -35,6 +37,15 @@ cpuLimit: 2
 memoryLimit: 4Gi
 cpuRequest: 600m
 memoryRequest: 1Gi
+
+# Resources for Debugger. This should not require any changes.
+# Defaults below (no need to uncomment and those will be used by helm chart)
+# Change it only if needed.
+#deploydebugger: true
+#cpuLimitdebugger: 16
+#memoryLimitdebugger: 32Gi
+#cpuRequestdebugger: 600m
+#memoryRequestdebugger: 1Gi
 
 # tolerations for your deployment. Include as many as you need and it will
 # be added to your deployment file.
