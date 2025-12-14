@@ -92,25 +92,16 @@ spec:
         - mountPath: /etc/siterm.yaml
           name: conf-{{ template "sitermdebugger.truncname" . }}
           subPath: sense-siterm-agent.yaml
-        - mountPath: /etc/grid-security/hostcert.pem
-          name: agent-hostcert
+        - mountPath: /etc/secret-mount
+          name: agent-tls-secret
           readOnly: true
-          subPath: hostcert.pem
-        - mountPath: /etc/grid-security/hostkey.pem
-          name: agent-hostkey
-          readOnly: true
-          subPath: hostkey.pem
       hostNetwork: {{ include "hostnetwork" . | trim }}
       hostPID: {{ include "hostpid" . | trim }}
       restartPolicy: Always
       volumes:
-        - name: agent-hostcert
+        - name: agent-tls-secret
           secret:
-            defaultMode: 420
-            items:
-            - key: tls.crt
-              path: hostcert.pem
-            secretName: cert-{{ template "sitermagent.truncname" . }}
+            secretName: tls-{{ template "sitermdebugger.truncname" . }}
         - name: agent-hostkey
           secret:
             defaultMode: 384

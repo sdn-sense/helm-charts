@@ -112,22 +112,9 @@ spec:
           name: secret-{{ template "sitefe.truncname" . }}
           readOnly: true
           subPath: ansible-conf.yaml
-        - mountPath: /etc/grid-security/hostcert.pem
+        - mountPath: /etc/cert-mount
           name: cert-{{ template "sitefe.truncname" . }}
           readOnly: true
-          subPath: cert.pem
-        - mountPath: /etc/grid-security/hostkey.pem
-          name: cert-{{ template "sitefe.truncname" . }}
-          readOnly: true
-          subPath: privkey.pem
-        - mountPath: /etc/httpd/certs/cert.pem
-          name: cert-{{ template "sitefe.truncname" . }}
-          readOnly: true
-          subPath: cert.pem
-        - mountPath: /etc/httpd/certs/privkey.pem
-          name: cert-{{ template "sitefe.truncname" . }}
-          readOnly: true
-          subPath: privkey.pem
         {{- if .Values.sshkeys }}
         - name: sshvol-{{ template "sitefe.truncname" . }}
           mountPath: /opt/siterm/config/ssh-keys/
@@ -152,12 +139,6 @@ spec:
           secretName: secret-{{ template "sitefe.truncname" . }}
       - name: cert-{{ template "sitefe.truncname" . }}
         secret:
-          defaultMode: 420
-          items:
-          - key: tls.crt
-            path: cert.pem
-          - key: tls.key
-            path: privkey.pem
           secretName: cert-{{ template "sitefe.truncname" . }}
       {{- if .Values.sshkeys }}
       - name: sshvol-{{ template "sitefe.truncname" . }}
