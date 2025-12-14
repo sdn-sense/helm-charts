@@ -93,21 +93,14 @@ spec:
           name: conf-{{ template "sitermdebugger.truncname" . }}
           subPath: sense-siterm-agent.yaml
         - mountPath: /etc/secret-mount
-          name: agent-tls-secret
+          name: cert-{{ template "sitermdebugger.truncname" . }}
           readOnly: true
       hostNetwork: {{ include "hostnetwork" . | trim }}
       hostPID: {{ include "hostpid" . | trim }}
       restartPolicy: Always
       volumes:
-        - name: agent-tls-secret
+        - name: cert-{{ template "sitermdebugger.truncname" . }}
           secret:
-            secretName: tls-{{ template "sitermdebugger.truncname" . }}
-        - name: agent-hostkey
-          secret:
-            defaultMode: 384
-            items:
-            - key: tls.key
-              path: hostkey.pem
             secretName: cert-{{ template "sitermagent.truncname" . }}
         - configMap:
             defaultMode: 420

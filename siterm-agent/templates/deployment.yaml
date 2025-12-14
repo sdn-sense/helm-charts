@@ -89,7 +89,7 @@ spec:
           name: conf-{{ template "sitermagent.truncname" . }}
           subPath: sense-siterm-agent.yaml
         - mountPath: /etc/secret-mount
-          name: agent-tls-secret
+          name: cert-{{ template "sitermagent.truncname" . }}
           readOnly: true
         {{- if (include "sitermagent.rttablesEnabled" . | trim | eq "true") }}
         - mountPath: /etc/iproute2/rt_tables
@@ -139,16 +139,16 @@ spec:
           name: conf-{{ template "sitermagent.truncname" . }}
           subPath: sense-siterm-agent.yaml
         - mountPath: /etc/secret-mount
-          name: agent-tls-secret
+          name: cert-{{ template "sitermagent.truncname" . }}
           readOnly: true
       {{- end }}
       hostNetwork: true
       hostPID: true
       restartPolicy: Always
       volumes:
-        - name: agent-tls-secret
+        - name: cert-{{ template "sitermagent.truncname" . }}
           secret:
-            secretName: tls-{{ template "sitermagent.truncname" . }}
+            secretName: cert-{{ template "sitermagent.truncname" . }}
         - configMap:
             defaultMode: 420
             items:
