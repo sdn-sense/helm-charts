@@ -112,7 +112,7 @@ spec:
           name: secret-{{ template "sitefe.truncname" . }}
           readOnly: true
           subPath: ansible-conf.yaml
-        - mountPath: /etc/cert-mount
+        - mountPath: /etc/secret-mount
           name: cert-{{ template "sitefe.truncname" . }}
           readOnly: true
         {{- if .Values.sshkeys }}
