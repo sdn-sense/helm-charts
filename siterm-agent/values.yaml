@@ -72,9 +72,9 @@ nodeSelector:
 #              values:
 #                - nodepool1
 
-# Security Context for your deployment. Include as many as you need and it will be added to deployment
-# Default one is already included below, e.g. NET_ADMIN capabilities
-# SiteRM Agent requires privileges to create vlan interfaces and it requires NET_ADMIN capabilities.
+# Security Context for your deployment.
+# SiteRM Agent REQUIRES NET_ADMIN capability to create VLAN interfaces and apply QoS rules.
+# Uncomment and enable the block below — without NET_ADMIN the agent will not function correctly.
 #securityContext:
 #  capabilities:
 #    add:
@@ -127,7 +127,8 @@ readiness:
 # NOTE: Recommendation is to run only 1 LLDPD daemon on the host, so if you have LLDPD running on the host - set this to true.
 # Default is true.
 # path - defaults to /var/run/lldpd.sock. Overwrite it if you have different path for LLDPD daemon socket.
-# e.g. EL versions use /var/run/lldpd.sock, Ubuntu uses /run/lldpd.socket (check and make sure that path is correct)
+# EL (RHEL/AlmaLinux/Rocky) versions use: /var/run/lldpd.sock
+# Ubuntu versions use:                    /var/run/lldpd.socket  (note the .socket suffix)
 #lldpd:
 #  enabled: false
 #  path: /var/run/lldpd.sock

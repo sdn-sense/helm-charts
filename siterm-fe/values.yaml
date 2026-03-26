@@ -110,7 +110,6 @@ ingress:
   host: <REPLACE_ME_TO_FQDN>
 #  annotations:
 #    kubernetes.io/ingress.class: haproxy
-#    kubernetes.io/ssl-passthrough: "true" # SSL Passthrough is required for haproxy ingress
 #    cert-manager.io/cluster-issuer: letsencrypt-prod
 
 # ===============================================================
