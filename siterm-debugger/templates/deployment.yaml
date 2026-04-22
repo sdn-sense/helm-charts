@@ -92,6 +92,11 @@ spec:
         - mountPath: /etc/siterm.yaml
           name: conf-{{ template "sitermdebugger.truncname" . }}
           subPath: sense-siterm-agent.yaml
+        {{- if .Values.manualConfig.enabled }}
+        - mountPath: /etc/siterm-config/main.yaml
+          name: conf-{{ template "sitermdebugger.truncname" . }}
+          subPath: manual-main.yaml
+        {{- end }}
         - mountPath: /etc/secret-mount
           name: cert-{{ template "sitermdebugger.truncname" . }}
           readOnly: true
@@ -107,6 +112,10 @@ spec:
             items:
             - key: sense-siterm-agent
               path: sense-siterm-agent.yaml
+            {{- if .Values.manualConfig.enabled }}
+            - key: manual-main
+              path: manual-main.yaml
+            {{- end }}
             name: conf-{{ template "sitermdebugger.truncname" . }}
           name: conf-{{ template "sitermdebugger.truncname" . }}
         {{- if (include "sitermdebugger.logstorageEnabled" . | trim | eq "true") }}

@@ -104,6 +104,19 @@ spec:
         - mountPath: /etc/siterm.yaml
           name: conf-{{ template "sitefe.truncname" . }}
           subPath: sense-siterm-fe.yaml
+        {{- if .Values.manualConfig.enabled }}
+        - mountPath: /etc/siterm-config/main.yaml
+          name: conf-{{ template "sitefe.truncname" . }}
+          subPath: manual-main.yaml
+        - mountPath: /etc/siterm-config/auth.yaml
+          name: conf-{{ template "sitefe.truncname" . }}
+          subPath: manual-auth.yaml
+        {{- if .Values.manualConfig.auth_re }}
+        - mountPath: /etc/siterm-config/auth-re.yaml
+          name: conf-{{ template "sitefe.truncname" . }}
+          subPath: manual-auth-re.yaml
+        {{- end }}
+        {{- end }}
         - mountPath: /etc/environment
           name: secret-{{ template "sitefe.truncname" . }}
           readOnly: true
@@ -126,6 +139,16 @@ spec:
           items:
           - key: sense-siterm-fe
             path: sense-siterm-fe.yaml
+          {{- if .Values.manualConfig.enabled }}
+          - key: manual-main
+            path: manual-main.yaml
+          - key: manual-auth
+            path: manual-auth.yaml
+          {{- if .Values.manualConfig.auth_re }}
+          - key: manual-auth-re
+            path: manual-auth-re.yaml
+          {{- end }}
+          {{- end }}
           name: conf-{{ template "sitefe.truncname" . }}
         name: conf-{{ template "sitefe.truncname" . }}
       - name: secret-{{ template "sitefe.truncname" . }}

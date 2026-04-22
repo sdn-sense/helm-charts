@@ -21,3 +21,9 @@ data:
     MD5: {{ .Values.md5 }}
 {{- end }}
 {{- end }}
+{{- if .Values.manualConfig.enabled }}
+    MAPPING_TYPE: Agent
+    MAIN_CONFIG_FILE: /etc/siterm-config/main.yaml
+  manual-main: |
+{{ .Values.manualConfig.main | indent 4 }}
+{{- end }}

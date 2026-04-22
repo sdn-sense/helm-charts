@@ -88,6 +88,11 @@ spec:
         - mountPath: /etc/siterm.yaml
           name: conf-{{ template "sitermagent.truncname" . }}
           subPath: sense-siterm-agent.yaml
+        {{- if .Values.manualConfig.enabled }}
+        - mountPath: /etc/siterm-config/main.yaml
+          name: conf-{{ template "sitermagent.truncname" . }}
+          subPath: manual-main.yaml
+        {{- end }}
         - mountPath: /etc/secret-mount
           name: cert-{{ template "sitermagent.truncname" . }}
           readOnly: true
@@ -138,6 +143,11 @@ spec:
         - mountPath: /etc/siterm.yaml
           name: conf-{{ template "sitermagent.truncname" . }}
           subPath: sense-siterm-agent.yaml
+        {{- if .Values.manualConfig.enabled }}
+        - mountPath: /etc/siterm-config/main.yaml
+          name: conf-{{ template "sitermagent.truncname" . }}
+          subPath: manual-main.yaml
+        {{- end }}
         - mountPath: /etc/secret-mount
           name: cert-{{ template "sitermagent.truncname" . }}
           readOnly: true
@@ -154,6 +164,10 @@ spec:
             items:
             - key: sense-siterm-agent
               path: sense-siterm-agent.yaml
+            {{- if .Values.manualConfig.enabled }}
+            - key: manual-main
+              path: manual-main.yaml
+            {{- end }}
             name: conf-{{ template "sitermagent.truncname" . }}
           name: conf-{{ template "sitermagent.truncname" . }}
         {{- if (include "sitermagent.rttablesEnabled" . | trim | eq "true") }}

@@ -20,3 +20,19 @@ data:
 {{- if .Values.md5 }}
     MD5: {{ .Values.md5 }}
 {{- end }}
+{{- if .Values.manualConfig.enabled }}
+    MAPPING_TYPE: FE
+    MAIN_CONFIG_FILE: /etc/siterm-config/main.yaml
+    AUTH_CONFIG_FILE: /etc/siterm-config/auth.yaml
+{{- if .Values.manualConfig.auth_re }}
+    AUTH_RE_CONFIG_FILE: /etc/siterm-config/auth-re.yaml
+{{- end }}
+  manual-main: |
+{{ .Values.manualConfig.main | indent 4 }}
+  manual-auth: |
+{{ .Values.manualConfig.auth | indent 4 }}
+{{- if .Values.manualConfig.auth_re }}
+  manual-auth-re: |
+{{ .Values.manualConfig.auth_re | indent 4 }}
+{{- end }}
+{{- end }}

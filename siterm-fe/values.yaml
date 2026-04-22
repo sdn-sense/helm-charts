@@ -123,6 +123,26 @@ md5: <REPLACE_ME_TO_UUID>
 #gitbranch: master
 #giturl: "https://raw.githubusercontent.com/"
 
+# Optional manual configuration mode. When enabled, the chart creates
+# main.yaml/auth.yaml/auth-re.yaml entries in the SiteRM ConfigMap and mounts
+# them into the pod. Git configuration is still the default when disabled.
+manualConfig:
+  enabled: false
+  main: ""
+  auth: ""
+  auth_re: ""
+# Example:
+#  main: |
+#    MAIN:
+#      general:
+#        sitename: <REPLACE_ME_TO_SITENAME>
+#  auth: |
+#    senseoprod:
+#      issuer: "/CN=Example CA"
+#      subject: "/CN=example-user"
+#  auth_re: |
+#    {}
+
 
 
 # Sadly, helm does not allow to include files outside of chart

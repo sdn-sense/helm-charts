@@ -165,6 +165,18 @@ md5: <REPLACE_ME_TO_UUID>
 #gitbranch: master
 #giturl: "https://raw.githubusercontent.com/"
 
+# Optional manual configuration mode. When enabled, the chart creates a
+# main.yaml entry in the SiteRM ConfigMap and mounts it into the pod. Git
+# configuration is still the default when disabled.
+manualConfig:
+  enabled: false
+  main: ""
+# Example:
+#  main: |
+#    MAIN:
+#      general:
+#        sitename: <REPLACE_ME_TO_SITENAME>
+
 # SSL Certificate parameters:
 # It does support getting certificate from cert-manager or
 # from files directory inside this chart.
