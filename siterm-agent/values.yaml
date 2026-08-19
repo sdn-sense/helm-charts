@@ -163,7 +163,7 @@ md5: <REPLACE_ME_TO_UUID>
 # Usually you do not need to change those, as defaults are correct.
 #gitrepo: "sdn-sense/rm-configs"
 #gitbranch: master
-#giturl: "https://raw.githubusercontent.com/"
+#giturl: "https://github.com/"
 
 # Optional manual configuration mode. When enabled, the chart creates a
 # main.yaml entry in the SiteRM ConfigMap and mounts it into the pod. Git

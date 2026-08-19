@@ -121,7 +121,7 @@ md5: <REPLACE_ME_TO_UUID>
 # Usually you do not need to change those, as defaults are correct.
 #gitrepo: "sdn-sense/rm-configs"
 #gitbranch: master
-#giturl: "https://raw.githubusercontent.com/"
+#giturl: "https://github.com/"
 
 # Optional manual configuration mode. When enabled, the chart creates
 # main.yaml/auth.yaml/auth-re.yaml entries in the SiteRM ConfigMap and mounts
