@@ -21,10 +21,10 @@ Define Deployment image
 {{- if .Values.image.image }}
 {{- printf "sdnsense/siterm-fe:%s" .Values.image.image }}
 {{- else }}
-{{- printf "sdnsense/siterm-fe:latest" }}
+{{- printf "sdnsense/siterm-fe:1.6.3-pre" }}
 {{- end }}
 {{- else }}
-{{- printf "sdnsense/siterm-fe:latest" }}
+{{- printf "sdnsense/siterm-fe:1.6.3-pre" }}
 {{- end }}
 {{- end }}
 
