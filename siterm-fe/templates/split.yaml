@@ -8,21 +8,7 @@ The single-container StatefulSet/Deployment (deployment.yaml) is not rendered in
 {{- if not (contains (printf "MARIA_DB_HOST=%s" $mariadbName) .Values.environment_file) }}
 {{- fail (printf "split.enabled: set MARIA_DB_HOST=%s in environment_file (MARIA_DB_USER must be root)" $mariadbName) }}
 {{- end }}
-{{- $jwtName := printf "jwt-%s" (include "sitefe.truncname" .) }}
-{{- $jwtExisting := lookup "v1" "Secret" .Values.namespace $jwtName }}
----
-# JWT signing key shared by all frontend replicas; generated once and kept across upgrades.
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ $jwtName }}
-  namespace: {{ .Values.namespace }}
-data:
-  {{- if and $jwtExisting (hasKey $jwtExisting.data "private_key.pem") }}
-  private_key.pem: {{ index $jwtExisting.data "private_key.pem" }}
-  {{- else }}
-  private_key.pem: {{ genPrivateKey "rsa" | b64enc }}
-  {{- end }}
+{{- /* The JWT signing key shared by all frontend replicas lives in the database (first frontend stores it). */}}
 ---
 apiVersion: v1
 kind: Service
@@ -81,6 +67,8 @@ spec:
             port: 3306
           initialDelaySeconds: 10
           periodSeconds: 10
+        resources:
+          {{- toYaml .Values.split.mariadb.resources | nindent 10 }}
         volumeMounts:
         - name: mariadb-data
           mountPath: /var/lib/mysql
@@ -139,6 +127,9 @@ spec:
         env:
         - name: SITERM_COMPONENT
           value: dbinit
+        # Clusters may refuse Jobs whose containers lack requests and limits.
+        resources:
+          {{- toYaml .Values.split.dbinit.resources | nindent 10 }}
         volumeMounts:
         - mountPath: /etc/environment
           name: secret-{{ include "sitefe.truncname" . }}

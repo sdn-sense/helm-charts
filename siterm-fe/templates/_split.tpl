@@ -48,11 +48,6 @@ Volume mounts of a component container. Call with (dict "root" $ "component" $co
   mountPath: /opt/siterm/config/ssh-keys/
   readOnly: true
 {{- end }}
-{{- if eq .component "frontend" }}
-- name: jwt-{{ include "sitefe.truncname" $root }}
-  mountPath: /etc/siterm-jwt
-  readOnly: true
-{{- end }}
 {{- end }}
 
 {{/*
@@ -99,12 +94,6 @@ Volumes of a component pod. Call with (dict "root" $ "component" $component).
     - key: {{ $key }}
       path: {{ $key }}
     {{- end }}
-{{- end }}
-{{- if eq .component "frontend" }}
-- name: jwt-{{ include "sitefe.truncname" $root }}
-  secret:
-    secretName: jwt-{{ include "sitefe.truncname" $root }}
-    defaultMode: 0400
 {{- end }}
 {{- end }}
 

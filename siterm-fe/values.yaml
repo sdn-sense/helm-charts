@@ -270,6 +270,14 @@ split:
     # Reuse the single-container PVC (its MariaDB data is under config/mysql); empty = new volume.
     # The data is upgraded in place to the image above (one-way) and root@'%' is added: back up the DB first.
     existingClaim: ""
+    resources:
+      requests: {cpu: "1", memory: 1Gi}
+      limits: {cpu: "1", memory: 1Gi}
+  # Schema create/upgrade Job.
+  dbinit:
+    resources:
+      requests: {cpu: "1", memory: 1Gi}
+      limits: {cpu: "1", memory: 1Gi}
   components:
     frontend: {replicas: 1}
     configfetcher: {replicas: 1}
