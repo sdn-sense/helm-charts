@@ -254,39 +254,3 @@ environment_file: |
 #  MIIJKQIBAAKCAgEApJNvz1WUk/iW1VBkX3UsCWdoxRpH7nYvMCrqyRbiKUI54CHu
 #  ...
 #  -----END RSA PRIVATE KEY-----
-
-# Split mode: every SiteRM component runs in its own Deployment, MariaDB in its own StatefulSet,
-# and the schema is created/upgraded by a Job on each install/upgrade. Components share state only
-# through MariaDB, so switchmanager/snmpmon/bgpmon/frontend can be scaled (devices are split between
-# replicas); lookup, policy, provisioning, validator, dbworker and debugger run one active instance
-# (extra replicas are standby). Requires MARIA_DB_HOST=<sitefe name>-mariadb and MARIA_DB_USER=root
-# in environment_file (the chart refuses to render otherwise and prints the expected name).
-split:
-  enabled: false
-  mariadb:
-    image: mariadb:11.4
-    capacity: 10Gi
-    storageClassName: ""
-    # Reuse the single-container PVC (its MariaDB data is under config/mysql); empty = new volume.
-    # The data is upgraded in place to the image above (one-way) and root@'%' is added: back up the DB first.
-    existingClaim: ""
-    resources:
-      requests: {cpu: "1", memory: 1Gi}
-      limits: {cpu: "1", memory: 1Gi}
-  # Schema create/upgrade Job.
-  dbinit:
-    resources:
-      requests: {cpu: "1", memory: 1Gi}
-      limits: {cpu: "1", memory: 1Gi}
-  components:
-    frontend: {replicas: 1}
-    configfetcher: {replicas: 1}
-    lookup: {replicas: 1}
-    policy: {replicas: 1}
-    provisioning: {replicas: 1}
-    switchmanager: {replicas: 1}
-    snmpmon: {replicas: 1}
-    bgpmon: {replicas: 1}
-    validator: {replicas: 1}
-    dbworker: {replicas: 1}
-    debugger: {replicas: 1}
