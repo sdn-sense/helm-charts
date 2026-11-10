@@ -1,3 +1,5 @@
+{{- /* Single-container deployment; split.enabled renders split.yaml instead. */ -}}
+{{- if not (and .Values.split .Values.split.enabled) }}
 ---
 # SENSENAMEDEPLOY: {{ template "sitefe.name" . }}
 # SENSEDEPLOYTYPE: {{ .Values.deploymentType }}
@@ -184,3 +186,4 @@ spec:
         persistentVolumeClaim:
           claimName: {{ .Values.logstorage.volname | default (printf "pvclog-%s" (include "sitefe.truncname" .)) }}
       {{- end }}
+{{- end }}

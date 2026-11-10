@@ -1,0 +1,224 @@
+{{- /*
+Split mode (split.enabled): every SiteRM component in its own Deployment, MariaDB as a StatefulSet,
+schema init/upgrade as a Job per release revision. Components share state only through MariaDB.
+The single-container StatefulSet/Deployment (deployment.yaml) is not rendered in this mode.
+*/ -}}
+{{- if and .Values.split .Values.split.enabled }}
+{{- $mariadbName := printf "%s-mariadb" (include "sitefe.name" .) }}
+{{- if not (contains (printf "MARIA_DB_HOST=%s" $mariadbName) .Values.environment_file) }}
+{{- fail (printf "split.enabled: set MARIA_DB_HOST=%s in environment_file (MARIA_DB_USER must be root)" $mariadbName) }}
+{{- end }}
+{{- $jwtName := printf "jwt-%s" (include "sitefe.truncname" .) }}
+{{- $jwtExisting := lookup "v1" "Secret" .Values.namespace $jwtName }}
+---
+# JWT signing key shared by all frontend replicas; generated once and kept across upgrades.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $jwtName }}
+  namespace: {{ .Values.namespace }}
+data:
+  {{- if and $jwtExisting (hasKey $jwtExisting.data "private_key.pem") }}
+  private_key.pem: {{ index $jwtExisting.data "private_key.pem" }}
+  {{- else }}
+  private_key.pem: {{ genPrivateKey "rsa" | b64enc }}
+  {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $mariadbName }}
+  namespace: {{ .Values.namespace }}
+spec:
+  ports:
+  - name: mysql
+    port: 3306
+    targetPort: 3306
+  selector:
+    k8s-app: {{ $mariadbName }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ $mariadbName }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    k8s-app: {{ $mariadbName }}
+spec:
+  serviceName: {{ $mariadbName }}
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: {{ $mariadbName }}
+  template:
+    metadata:
+      labels:
+        k8s-app: {{ $mariadbName }}
+    spec:
+      {{- include "sitefe.splitScheduling" . | nindent 6 }}
+      containers:
+      - name: mariadb
+        image: {{ .Values.split.mariadb.image | default "mariadb:11.4" }}
+        command: ["bash", "-c"]
+        args:
+        - |
+          set -a; . /etc/siterm-env/environment.conf; set +a
+          export MARIADB_ROOT_PASSWORD="$MARIA_DB_PASSWORD" MARIADB_DATABASE="${MARIA_DB_DATABASE:-sitefe}" MARIADB_AUTO_UPGRADE=1
+          exec docker-entrypoint.sh mariadbd
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        volumeMounts:
+        - name: mariadb-data
+          mountPath: /var/lib/mysql
+          {{- if .Values.split.mariadb.existingClaim }}
+          # Reuse the single-container volume: its MariaDB data lives under config/mysql.
+          subPath: config/mysql
+          {{- end }}
+        - name: mariadb-env
+          mountPath: /etc/siterm-env
+          readOnly: true
+      volumes:
+      - name: mariadb-env
+        secret:
+          secretName: secret-{{ include "sitefe.truncname" . }}
+          items:
+          - key: fe-environment
+            path: environment.conf
+      {{- if .Values.split.mariadb.existingClaim }}
+      - name: mariadb-data
+        persistentVolumeClaim:
+          claimName: {{ .Values.split.mariadb.existingClaim }}
+      {{- end }}
+  {{- if not .Values.split.mariadb.existingClaim }}
+  volumeClaimTemplates:
+  - metadata:
+      name: mariadb-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: {{ .Values.split.mariadb.storageClassName | default .Values.storage.storageClassName | default "standard" }}
+      resources:
+        requests:
+          storage: {{ .Values.split.mariadb.capacity | default "10Gi" }}
+  {{- end }}
+---
+# Creates/upgrades the schema once per release revision; components wait until it reports done.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "sitefe.name" . }}-dbinit-{{ .Release.Revision }}
+  namespace: {{ .Values.namespace }}
+spec:
+  backoffLimit: 20
+  ttlSecondsAfterFinished: 86400
+  template:
+    metadata:
+      labels:
+        k8s-app: {{ include "sitefe.name" . }}-dbinit
+    spec:
+      restartPolicy: OnFailure
+      {{- include "sitefe.splitScheduling" . | nindent 6 }}
+      containers:
+      - name: dbinit
+        image: {{ include "defaultregistry" . }}/{{ include "deploymentimage" . }}
+        imagePullPolicy: {{ include "deploymentpullpolicy" . }}
+        env:
+        - name: SITERM_COMPONENT
+          value: dbinit
+        volumeMounts:
+        - mountPath: /etc/environment
+          name: secret-{{ include "sitefe.truncname" . }}
+          readOnly: true
+          subPath: environment.conf
+      volumes:
+      - name: secret-{{ include "sitefe.truncname" . }}
+        secret:
+          secretName: secret-{{ include "sitefe.truncname" . }}
+          items:
+          - key: fe-environment
+            path: environment.conf
+{{- range $component, $settings := .Values.split.components }}
+{{- /* The frontend keeps the single-container label, so the existing Service and Ingress select it. */}}
+{{- $app := ternary (include "sitefe.name" $) (printf "%s-%s" (include "sitefe.name" $) $component) (eq $component "frontend") }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sitefe.name" $ }}-{{ $component }}
+  namespace: {{ $.Values.namespace }}
+  labels:
+    k8s-app: {{ $app }}
+    siterm-component: {{ $component }}
+    helm-version: {{ $.Chart.Version }}
+spec:
+  replicas: {{ $settings.replicas | default 1 }}
+  selector:
+    matchLabels:
+      k8s-app: {{ $app }}
+  template:
+    metadata:
+      labels:
+        k8s-app: {{ $app }}
+        siterm-component: {{ $component }}
+        helm-version: {{ $.Chart.Version }}
+    spec:
+      {{- include "sitefe.splitScheduling" $ | nindent 6 }}
+      containers:
+      - name: {{ $component }}
+        image: {{ include "defaultregistry" $ }}/{{ include "deploymentimage" $ }}
+        imagePullPolicy: {{ include "deploymentpullpolicy" $ }}
+        env:
+        - name: SITERM_COMPONENT
+          value: {{ $component }}
+        {{- if has $component (list "switchmanager" "snmpmon" "bgpmon") }}
+        # Scaled replicas report their state under the pod name.
+        - name: SITERM_INSTANCE
+          value: hostname
+        {{- end }}
+        {{- if eq $component "frontend" }}
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        - containerPort: 443
+          protocol: TCP
+        {{- end }}
+        {{- if $.Values.liveness.enabled }}
+        livenessProbe:
+          exec:
+            command:
+            - siterm-liveness
+          initialDelaySeconds: {{ $.Values.liveness.initialDelaySeconds }}
+          periodSeconds: {{ $.Values.liveness.periodSeconds }}
+          failureThreshold: {{ $.Values.liveness.failureThreshold }}
+          successThreshold: {{ $.Values.liveness.successThreshold }}
+          timeoutSeconds: {{ $.Values.liveness.timeoutSeconds }}
+        {{- end }}
+        {{- if $.Values.readiness.enabled }}
+        readinessProbe:
+          exec:
+            command:
+            - siterm-readiness
+          initialDelaySeconds: {{ $.Values.readiness.initialDelaySeconds }}
+          periodSeconds: {{ $.Values.readiness.periodSeconds }}
+          failureThreshold: {{ $.Values.readiness.failureThreshold }}
+          successThreshold: {{ $.Values.readiness.successThreshold }}
+          timeoutSeconds: {{ $.Values.readiness.timeoutSeconds }}
+        {{- end }}
+        resources:
+          limits:
+            cpu: {{ $settings.cpuLimit | default (include "cpulimit" $) }}
+            memory: {{ $settings.memoryLimit | default (include "memorylimit" $) }}
+          requests:
+            cpu: {{ $settings.cpuRequest | default (include "cpuRequest" $) }}
+            memory: {{ $settings.memoryRequest | default (include "memoryRequest" $) }}
+        volumeMounts:
+        {{- include "sitefe.splitMounts" (dict "root" $ "component" $component) | nindent 8 }}
+      volumes:
+      {{- include "sitefe.splitVolumes" (dict "root" $ "component" $component) | nindent 6 }}
+{{- end }}
+{{- end }}
