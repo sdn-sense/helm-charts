@@ -3,6 +3,15 @@ Split mode helpers: one Deployment per SiteRM component, sharing nothing but the
 */}}
 
 {{/*
+Base name of split Deployments and Jobs (at most 32 chars, unique per site). Pod hostnames are cut at 63 chars, which
+for longer names drops the replica suffix and gives replicas the same lease/instance identity.
+*/}}
+{{- define "sitefe.splitbase" -}}
+{{- $name := include "sitefe.name" . -}}
+{{- printf "%s-%s" ($name | trunc 23 | trimSuffix "-") ($name | sha256sum | trunc 8) -}}
+{{- end }}
+
+{{/*
 Volume mounts of a component container. Call with (dict "root" $ "component" $component).
 */}}
 {{- define "sitefe.splitMounts" -}}

@@ -64,7 +64,15 @@ spec:
         - |
           set -a; . /etc/siterm-env/environment.conf; set +a
           export MARIADB_ROOT_PASSWORD="$MARIA_DB_PASSWORD" MARIADB_DATABASE="${MARIA_DB_DATABASE:-sitefe}" MARIADB_AUTO_UPGRADE=1
-          exec docker-entrypoint.sh mariadbd
+          if [ -d /var/lib/mysql/mysql ]; then
+            # Existing data (e.g. a reused single-container volume) is not re-initialised by the image and may only
+            # allow root@localhost; (re)create root@'%' with the current password once the real server accepts it.
+            pw=${MARIA_DB_PASSWORD//\\/\\\\}; pw=${pw//\'/\\\'}
+            sql="CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '$pw'; ALTER USER 'root'@'%' IDENTIFIED BY '$pw'; GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;"
+            (until printf '%s\n' "$sql" | MYSQL_PWD="$MARIA_DB_PASSWORD" mariadb -uroot >/dev/null 2>&1; do sleep 5; done) &
+          fi
+          # Same limits as the single-container MariaDB.
+          exec docker-entrypoint.sh mariadbd --max-allowed-packet=64M --max-connections=500
         ports:
         - containerPort: 3306
           protocol: TCP
@@ -107,11 +115,12 @@ spec:
           storage: {{ .Values.split.mariadb.capacity | default "10Gi" }}
   {{- end }}
 ---
-# Creates/upgrades the schema once per release revision; components wait until it reports done.
+# Creates/upgrades the schema on every install/apply (idempotent); components wait until it reports done.
+# Named by render time because `helm template` always reports revision 1 and a Job spec cannot be updated.
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "sitefe.name" . }}-dbinit-{{ .Release.Revision }}
+  name: {{ include "sitefe.splitbase" . }}-dbinit-{{ now | unixEpoch }}
   namespace: {{ .Values.namespace }}
 spec:
   backoffLimit: 20
@@ -149,7 +158,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "sitefe.name" $ }}-{{ $component }}
+  name: {{ include "sitefe.splitbase" $ }}-{{ $component }}
   namespace: {{ $.Values.namespace }}
   labels:
     k8s-app: {{ $app }}

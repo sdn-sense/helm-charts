@@ -268,6 +268,7 @@ split:
     capacity: 10Gi
     storageClassName: ""
     # Reuse the single-container PVC (its MariaDB data is under config/mysql); empty = new volume.
+    # The data is upgraded in place to the image above (one-way) and root@'%' is added: back up the DB first.
     existingClaim: ""
   components:
     frontend: {replicas: 1}

@@ -21,10 +21,10 @@ Define Deployment image
 {{- if .Values.image.image }}
 {{- printf "sdnsense/siterm-debugger:%s" .Values.image.image }}
 {{- else }}
-{{- printf "sdnsense/siterm-debugger:1.6.6-pre1" }}
+{{- printf "sdnsense/siterm-debugger:1.6.6-pre2" }}
 {{- end }}
 {{- else }}
-{{- printf "sdnsense/siterm-debugger:1.6.6-pre1" }}
+{{- printf "sdnsense/siterm-debugger:1.6.6-pre2" }}
 {{- end }}
 {{- end }}
 
