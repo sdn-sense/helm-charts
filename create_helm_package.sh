@@ -4,7 +4,7 @@ set -e
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CHARTS=("siterm-fe" "siterm-agent" "siterm-debugger")
 BUILD_DIR="$BASE_DIR/builds"
-REPO_URL="https://sdn-sense.github.io/helm-charts/builds"
+REPO_URL="https://sdn-sense.dev/helm-charts/builds"
 
 # Require $1 (NEW_VERSION)
 if [ -z "$1" ]; then

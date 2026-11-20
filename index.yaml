@@ -9,7 +9,7 @@ entries:
     name: siterm-agent
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-agent-1.6.5.tgz
+    - https://sdn-sense.dev/helm-charts/builds/siterm-agent-1.6.5.tgz
     version: 1.6.5
   - apiVersion: v2
     appVersion: 1.16.0
@@ -19,7 +19,7 @@ entries:
     name: siterm-agent
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-agent-1.6.4.tgz
+    - https://sdn-sense.dev/helm-charts/builds/siterm-agent-1.6.4.tgz
     version: 1.6.4
   - apiVersion: v2
     appVersion: 1.16.0
@@ -29,7 +29,7 @@ entries:
     name: siterm-agent
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-agent-1.6.4-pre.tgz
+    - https://sdn-sense.dev/helm-charts/builds/siterm-agent-1.6.4-pre.tgz
     version: 1.6.4-pre
   - apiVersion: v2
     appVersion: 1.16.0
@@ -39,7 +39,7 @@ entries:
     name: siterm-agent
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-agent-1.6.3.tgz
+    - https://sdn-sense.dev/helm-charts/builds/siterm-agent-1.6.3.tgz
     version: 1.6.3
   siterm-debugger:
   - apiVersion: v2
@@ -50,7 +50,7 @@ entries:
     name: siterm-debugger
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-debugger-1.6.5.tgz
+    - https://sdn-sense.dev/helm-charts/builds/siterm-debugger-1.6.5.tgz
     version: 1.6.5
   - apiVersion: v2
     appVersion: 1.16.0
@@ -60,7 +60,7 @@ entries:
     name: siterm-debugger
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-debugger-1.6.4.tgz
+    - https://sdn-sense.dev/helm-charts/builds/siterm-debugger-1.6.4.tgz
     version: 1.6.4
   - apiVersion: v2
     appVersion: 1.16.0
@@ -70,7 +70,7 @@ entries:
     name: siterm-debugger
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-debugger-1.6.4-pre.tgz
+    - https://sdn-sense.dev/helm-charts/builds/siterm-debugger-1.6.4-pre.tgz
     version: 1.6.4-pre
   - apiVersion: v2
     appVersion: 1.16.0
@@ -80,7 +80,7 @@ entries:
     name: siterm-debugger
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-debugger-1.6.3.tgz
+    - https://sdn-sense.dev/helm-charts/builds/siterm-debugger-1.6.3.tgz
     version: 1.6.3
   siterm-fe:
   - apiVersion: v2
@@ -91,7 +91,7 @@ entries:
     name: siterm-fe
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-fe-1.6.5.tgz
+    - https://sdn-sense.dev/helm-charts/builds/siterm-fe-1.6.5.tgz
     version: 1.6.5
   - apiVersion: v2
     appVersion: 1.16.0
@@ -101,7 +101,7 @@ entries:
     name: siterm-fe
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-fe-1.6.4.tgz
+    - https://sdn-sense.dev/helm-charts/builds/siterm-fe-1.6.4.tgz
     version: 1.6.4
   - apiVersion: v2
     appVersion: 1.16.0
@@ -111,7 +111,7 @@ entries:
     name: siterm-fe
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-fe-1.6.4-pre.tgz
+    - https://sdn-sense.dev/helm-charts/builds/siterm-fe-1.6.4-pre.tgz
     version: 1.6.4-pre
   - apiVersion: v2
     appVersion: 1.16.0
@@ -121,6 +121,6 @@ entries:
     name: siterm-fe
     type: application
     urls:
-    - https://sdn-sense.github.io/helm-charts/builds/siterm-fe-1.6.3.tgz
+    - https://sdn-sense.dev/helm-charts/builds/siterm-fe-1.6.3.tgz
     version: 1.6.3
 generated: "2026-11-02T15:19:23.779301-06:00"

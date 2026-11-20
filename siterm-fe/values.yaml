@@ -150,9 +150,9 @@ manualConfig:
 # parameters to correct values.
 # Spacing is important, so make sure to keep it at 2 spaces, which points to line beginning inside file (as this is a YAML file)
 # In case it is RAW (No network configuration) - set ansible_conf to inventory: {}
-# For the rest - see here for format: https://sdn-sense.github.io/NetControlAnsible.html and supported devices;
+# For the rest - see here for format: https://sdn-sense.dev/NetControlAnsible.html and supported devices;
 ansible_conf: |
-  # See https://sdn-sense.github.io/NetControlAnsible.html for format
+  # See https://sdn-sense.dev/NetControlAnsible.html for format
   inventory:
     dellos9_s0:
       network_os: sense.dellos9.dellos9
